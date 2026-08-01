@@ -1,18 +1,16 @@
 'use client';
 
-import React from 'react';
-import Button from '@/components/Button';
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Button from '@/components/Button';
 
 /**
- * Contact Landing Page
- * Simple contact page with enquiry type routing
- * Full contact form coming in Package 5
+ * Contact Landing Page - Content
+ * Handles enquiry type routing with useSearchParams
  */
-export default function ContactPage() {
+function ContactContent() {
   const searchParams = useSearchParams();
   const enquiry = searchParams.get('enquiry') || 'estimate';
-  const type = searchParams.get('type') || '';
 
   const enquiries: Record<string, { title: string; description: string }> = {
     estimate: {
@@ -31,12 +29,25 @@ export default function ContactPage() {
 
   const selected = enquiries[enquiry] || enquiries.estimate;
 
+  if (!selected) {
+    return (
+      <main className="flex-grow">
+        <section className="py-3xl">
+          <div className="max-w-2xl mx-auto px-md">
+            <h1 className="text-h2 mb-lg text-brand-navy">Get in Touch</h1>
+            <p className="text-body text-grey-600">Error: Invalid enquiry type</p>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="flex-grow">
       <section className="py-3xl">
         <div className="max-w-2xl mx-auto px-md">
           <h1 className="text-h2 mb-lg text-brand-navy">Get in Touch</h1>
-          
+
           <div className="mb-2xl">
             <h2 className="text-h3 mb-md text-brand-navy">{selected.title}</h2>
             <p className="text-body mb-lg text-grey-600">{selected.description}</p>
@@ -78,5 +89,18 @@ export default function ContactPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+/**
+ * Contact Landing Page
+ * Simple contact page with enquiry type routing
+ * Full contact form coming in Package 5
+ */
+export default function ContactPage() {
+  return (
+    <Suspense fallback={<div>Loading contact page...</div>}>
+      <ContactContent />
+    </Suspense>
   );
 }

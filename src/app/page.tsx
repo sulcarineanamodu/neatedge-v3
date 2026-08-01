@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Button from '@/components/Button';
 import Card, { CardBody } from '@/components/Card';
 import { getFeatureFlags } from '@/lib/features';
