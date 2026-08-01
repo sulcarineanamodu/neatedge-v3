@@ -4,6 +4,7 @@
  */
 
 import type { PageMetadata } from '@/types';
+import { getRobotsObject } from '@/lib/environment';
 
 /**
  * Default metadata for the site
@@ -20,11 +21,30 @@ export const DEFAULT_METADATA: PageMetadata = {
 
 /**
  * Generate complete metadata object
+ * Environment-aware: applies noindex for staging/preview environments
  */
 export function generateMetadata(overrides?: Partial<PageMetadata>): PageMetadata {
+  const robotsObject = getRobotsObject();
+  const robotsString = robotsObject.noindex ? 'noindex, nofollow' : 'index, follow';
+
   return {
     ...DEFAULT_METADATA,
     ...overrides,
+    robots: robotsString,
+  };
+}
+
+/**
+ * Generate complete metadata object with robots object format
+ * For use with Next.js Metadata API
+ */
+export function generateMetadataWithRobotsObject(
+  overrides?: Partial<PageMetadata>,
+): PageMetadata & { robotsObject?: ReturnType<typeof getRobotsObject> } {
+  const metadata = generateMetadata(overrides);
+  return {
+    ...metadata,
+    robotsObject: getRobotsObject(),
   };
 }
 

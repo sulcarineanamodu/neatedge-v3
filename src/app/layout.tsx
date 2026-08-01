@@ -2,10 +2,13 @@ import type { Metadata } from 'next';
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import StagingBanner from '@/components/StagingBanner';
 import { generateMetadata as generateSeoMetadata } from '@/lib/seo';
+import { getRobotsObject } from '@/lib/environment';
 import '@/styles/globals.css';
 
 const seoMetadata = generateSeoMetadata();
+const robotsObject = getRobotsObject();
 
 export const metadata: Metadata = {
   title: seoMetadata.title,
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: seoMetadata.canonical,
   },
+  robots: robotsObject,
   openGraph: {
     title: seoMetadata.title,
     description: seoMetadata.description,
@@ -26,7 +30,6 @@ export const metadata: Metadata = {
     description: seoMetadata.description,
     images: seoMetadata.ogImage ? [seoMetadata.ogImage] : [],
   },
-  robots: seoMetadata.robots,
 };
 
 export default function RootLayout({
@@ -43,6 +46,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="flex flex-col min-h-screen bg-white text-grey-700">
+        <StagingBanner />
         <Header />
         <main className="flex-grow">{children}</main>
         <Footer />
