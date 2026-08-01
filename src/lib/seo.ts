@@ -10,11 +10,11 @@ import { getRobotsObject } from '@/lib/environment';
  * Default metadata for the site
  */
 export const DEFAULT_METADATA: PageMetadata = {
-  title: 'Neatedge Cleaning | Professional Cleaning & Garden Care',
+  title: 'Professional Cleaning Across West London | Neatedge Cleaning',
   description:
-    'Professional cleaning and garden care services in London. Trusted by businesses and homeowners.',
-  canonical: 'https://neatedgecleaning.co.uk',
-  ogImage: 'https://neatedgecleaning.co.uk/og-image.jpg',
+    'Professional residential, commercial and property cleaning across Uxbridge, West Drayton, Hayes, Hillingdon and the Heathrow corridor. Founder-led service with £5M insurance.',
+  canonical: 'https://neatedgecleaning.com/',
+  ogImage: 'https://neatedgecleaning.com/og-image.jpg',
   ogType: 'website',
   robots: 'index, follow',
 };
@@ -55,11 +55,11 @@ export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Neatedge Cleaning',
-    url: 'https://neatedgecleaning.co.uk',
-    logo: 'https://neatedgecleaning.co.uk/logo.png',
+    name: 'Neatedge Cleaning Ltd',
+    url: 'https://neatedgecleaning.com/',
+    logo: 'https://neatedgecleaning.com/logo.png',
     description:
-      'Professional commercial and residential cleaning services in London, UK.',
+      'Professional residential, commercial and property cleaning across West London.',
     sameAs: [
       'https://www.instagram.com/neatedgecleaning',
       'https://www.linkedin.com/company/neatedge-cleaning',
@@ -67,13 +67,13 @@ export function generateOrganizationSchema() {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
-      email: 'info@neatedgecleaning.co.uk',
-      telephone: '+44-XXXXXXXXX',
+      email: 'info@neatedgecleaning.com',
+      telephone: '+447886091926',
     },
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'GB',
-      addressLocality: 'London',
+      addressLocality: 'West London',
     },
   };
 }
@@ -85,21 +85,24 @@ export function generateLocalBusinessSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    name: 'Neatedge Cleaning',
-    image: 'https://neatedgecleaning.co.uk/hero-image.jpg',
-    description: 'Professional cleaning and garden maintenance services.',
+    name: 'Neatedge Cleaning Ltd',
+    image: 'https://neatedgecleaning.com/hero-image.jpg',
+    description: 'Professional residential, commercial and property cleaning',
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'GB',
-      addressLocality: 'London',
+      addressLocality: 'West London',
+      areaServed: ['Uxbridge', 'West Drayton', 'Hayes', 'Hillingdon'],
     },
-    telephone: '+44-XXXXXXXXX',
-    url: 'https://neatedgecleaning.co.uk',
-    priceRange: '£££',
+    telephone: '+447886091926',
+    email: 'info@neatedgecleaning.com',
+    url: 'https://neatedgecleaning.com/',
+    priceRange: '$$',
     sameAs: [
       'https://www.instagram.com/neatedgecleaning',
       'https://www.linkedin.com/company/neatedge-cleaning',
     ],
+    serviceType: ['Residential Cleaning', 'Commercial Cleaning'],
   };
 }
 
@@ -118,10 +121,10 @@ export function generateServiceSchema(
     description: description,
     provider: {
       '@type': 'Organization',
-      name: 'Neatedge Cleaning',
-      url: 'https://neatedgecleaning.co.uk',
+      name: 'Neatedge Cleaning Ltd',
+      url: 'https://neatedgecleaning.com/',
     },
-    areaServed: serviceArea || 'London, UK',
+    areaServed: serviceArea || 'West London, UK',
     serviceType: 'Cleaning Service',
   };
 }
