@@ -1,11 +1,4 @@
-import { Metadata } from 'next';
 import Footer from '@/components/Footer';
-
-export const metadata = {
-  title: 'Professional Cleaning Services Across West London | Neatedge',
-  description: 'Explore residential, commercial and property cleaning services across Uxbridge, West Drayton, Hayes, Hillingdon and the Heathrow corridor.',
-  canonical: 'https://neatedgecleaning.com/services',
-};
 
 export default function ServicesPage() {
   return (
