@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { validateEnquiry, enquirySubmissionSchema } from '@/lib/validation/enquiry';
+import { describe, it, expect } from 'vitest';
+import { enquirySubmissionSchema } from '@/lib/validation/enquiry';
 
 describe('Lead Validation and Database Tests', () => {
   // Test 1: Valid enquiry is accepted
@@ -172,9 +172,6 @@ describe('Security Tests', () => {
   it('confirms service-role key not in browser environment', () => {
     // Service role key should NEVER have NEXT_PUBLIC prefix (would expose to browser)
     // This is a naming convention check, not a runtime check
-    const hasServiceRoleVar = Object.keys(process.env).some(
-      (key) => key === 'SUPABASE_SERVICE_ROLE_KEY'
-    );
     const neverPublicKey = !Object.keys(process.env).some(
       (key) => key === 'NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY'
     );

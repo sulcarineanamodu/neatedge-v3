@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateEnquiry, enquirySubmissionSchema } from '@/lib/validation/enquiry';
+import { enquirySubmissionSchema } from '@/lib/validation/enquiry';
 import { createLead, checkDuplicateSubmission } from '@/lib/db/leads';
 
 // Rate limiting: track submissions by IP (in-memory for this demo)

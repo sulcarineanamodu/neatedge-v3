@@ -82,9 +82,9 @@ export function validateEnquiry(data: unknown) {
     if (error instanceof z.ZodError) {
       return {
         success: false,
-        errors: error.errors.map((e) => ({
-          field: e.path.join('.'),
-          message: e.message,
+        errors: error.issues.map((issue) => ({
+          field: issue.path.join('.'),
+          message: issue.message,
         })),
       };
     }
