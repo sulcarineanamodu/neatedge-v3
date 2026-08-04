@@ -42,7 +42,7 @@ export async function sendCustomerAcknowledgementEmail(
     if (result.error) {
       return {
         success: false,
-        errorCode: result.error.code || 'unknown',
+        errorCode: result.error.message || 'unknown',
         errorMessage: result.error.message || 'Failed to send email',
       };
     }
@@ -96,7 +96,7 @@ export async function sendInternalLeadNotification(
     if (result.error) {
       return {
         success: false,
-        errorCode: result.error.code || 'unknown',
+        errorCode: result.error.message || 'unknown',
         errorMessage: result.error.message || 'Failed to send email',
       };
     }

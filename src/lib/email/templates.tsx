@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface CustomerEmailProps {
   name: string;
   enquiryType: string;
