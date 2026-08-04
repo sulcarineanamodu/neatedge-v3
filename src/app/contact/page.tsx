@@ -14,6 +14,7 @@ export default function ContactPage() {
     postcode: '',
     message: '',
     privacyConsent: false,
+    marketingConsent: false,
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -43,6 +44,7 @@ export default function ContactPage() {
           postcode: formData.postcode,
           message: formData.message,
           privacyConsent: formData.privacyConsent,
+          marketingConsent: formData.marketingConsent,
           enquiryType,
         }),
       });
@@ -52,7 +54,7 @@ export default function ContactPage() {
       }
 
       setStatus('success');
-      setFormData({ name: '', email: '', phone: '', postcode: '', message: '', privacyConsent: false });
+      setFormData({ name: '', email: '', phone: '', postcode: '', message: '', privacyConsent: false, marketingConsent: false });
       setTimeout(() => setStatus('idle'), 5000);
     } catch (error) {
       setStatus('error');
@@ -189,18 +191,47 @@ export default function ContactPage() {
               </div>
             )}
 
-            <div className="flex items-start">
-              <input
-                type="checkbox"
-                name="privacyConsent"
-                checked={formData.privacyConsent}
-                onChange={handleChange}
-                required
-                className="mt-1 w-4 h-4 border border-gray-300 rounded focus:outline-none focus:border-[#D4A574]"
-              />
-              <label className="ml-3 text-sm text-gray-700">
-                I agree to the privacy policy and consent to being contacted about my enquiry *
-              </label>
+            {/* Privacy Notice Section */}
+            <div className="bg-gray-50 p-4 rounded border border-gray-200">
+              <p className="text-sm text-gray-700 mb-4">
+                <strong>Privacy Notice:</strong> By submitting this enquiry, you acknowledge that Neatedge Cleaning will use the information provided to review and respond to your request. Read our{' '}
+                <a href="/privacy" className="text-[#D4A574] hover:underline">
+                  Privacy Notice
+                </a>
+                .
+              </p>
+
+              {/* Privacy Consent (Required) */}
+              <div className="flex items-start mb-3">
+                <input
+                  type="checkbox"
+                  id="privacyConsent"
+                  name="privacyConsent"
+                  checked={formData.privacyConsent}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 w-4 h-4 border border-gray-300 rounded focus:outline-none focus:border-[#D4A574] cursor-pointer"
+                />
+                <label htmlFor="privacyConsent" className="ml-3 text-sm text-gray-700 cursor-pointer">
+                  I consent to Neatedge Cleaning processing my information <span className="text-red-600">*</span>
+                </label>
+              </div>
+
+              {/* Marketing Consent (Optional) */}
+              <div className="flex items-start">
+                <input
+                  type="checkbox"
+                  id="marketingConsent"
+                  name="marketingConsent"
+                  checked={formData.marketingConsent}
+                  onChange={handleChange}
+                  className="mt-1 w-4 h-4 border border-gray-300 rounded focus:outline-none focus:border-[#D4A574] cursor-pointer"
+                />
+                <label htmlFor="marketingConsent" className="ml-3 text-sm text-gray-700 cursor-pointer">
+                  I would like to receive occasional cleaning offers and updates from Neatedge Cleaning
+                </label>
+              </div>
+              <p className="text-xs text-gray-600 ml-7 mt-1">Optional. Not required to obtain a quotation.</p>
             </div>
 
             <button

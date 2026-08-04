@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { enquirySubmissionSchema } from '@/lib/validation/enquiry';
 import { createLead, checkDuplicateSubmission } from '@/lib/db/leads';
+import {
+  sendCustomerAcknowledgementEmail,
+  sendInternalLeadNotification,
+  updateLeadEmailStatus,
+} from '@/lib/email/resend';
 
 // Rate limiting: track submissions by IP (in-memory for this demo)
 const submissionTracker = new Map<string, number[]>();
@@ -94,8 +99,63 @@ export async function POST(request: NextRequest) {
     // Log submission (sanitized)
     console.log(`[LEAD_SUBMITTED] Type: ${data.enquiryType}, Method: ${data.preferredContactMethod}`);
 
-    // TODO: Send confirmation email via SendGrid/Mailgun
-    // TODO: Send internal notification
+    // Send emails (fire-and-forget, non-blocking)
+    // Database save is primary transaction — emails are best-effort
+    if (result.leadId) {
+      // Send customer acknowledgement email
+      const customerEmailResult = await sendCustomerAcknowledgementEmail(
+        data.email,
+        data.name,
+        data.enquiryType,
+        result.leadId
+      );
+
+      if (customerEmailResult.success) {
+        await updateLeadEmailStatus(
+          result.leadId,
+          'customer',
+          'sent',
+          customerEmailResult.messageId
+        );
+      } else {
+        await updateLeadEmailStatus(
+          result.leadId,
+          'customer',
+          'failed',
+          undefined,
+          customerEmailResult.errorCode
+        );
+      }
+
+      // Send internal notification email
+      const internalEmailResult = await sendInternalLeadNotification(
+        data.name,
+        data.email,
+        data.telephone,
+        data.postcode,
+        data.enquiryType,
+        data.message,
+        data.preferredContactMethod,
+        result.leadId
+      );
+
+      if (internalEmailResult.success) {
+        await updateLeadEmailStatus(
+          result.leadId,
+          'internal',
+          'sent',
+          internalEmailResult.messageId
+        );
+      } else {
+        await updateLeadEmailStatus(
+          result.leadId,
+          'internal',
+          'failed',
+          undefined,
+          internalEmailResult.errorCode
+        );
+      }
+    }
 
     return NextResponse.json(
       {
