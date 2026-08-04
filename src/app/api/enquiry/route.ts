@@ -56,33 +56,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function getConfirmationMessage(data: EnquiryData) {
-  const typeLabels: Record<string, string> = {
-    'general': 'General Enquiry',
-    'residential-estimate': 'Residential Cleaning Estimate',
-    'commercial-survey': 'Commercial Site Survey',
-    'property-partnership': 'Property Partnership',
-  };
-
-  const label = typeLabels[data.enquiryType] || 'Enquiry';
-  return {
-    subject: `Thanks for your ${label} - Neatedge Cleaning`,
-    html: `
-      <h2>Thanks, ${data.name}!</h2>
-      <p>We've received your ${label.toLowerCase()} and will be in touch within 24 hours.</p>
-      <p><strong>Your Reference:</strong> #${leads.length}</p>
-      <p><strong>Contact Details:</strong></p>
-      <ul>
-        <li>Email: ${data.email}</li>
-        <li>Phone: ${data.phone}</li>
-        <li>Postcode: ${data.postcode}</li>
-      </ul>
-      <p>If you need to reach us urgently, call <strong>07886 091926</strong>.</p>
-      <p>Best regards,<br>The Neatedge Team</p>
-    `,
-  };
-}
-
 // GET endpoint to retrieve leads (for admin dashboard - implement auth in production)
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
