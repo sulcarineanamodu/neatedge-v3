@@ -7,7 +7,7 @@ export default function EndOfTenancyPage() {
     <main className="min-h-screen bg-white">
       <section className="bg-[#001F3F] text-white py-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl font-bold mb-4">End of Tenancy Cleaning That Gets You Your Deposit Back</h1>
+          <h1 className="text-5xl font-bold mb-4">Professional End-of-Tenancy Cleaning Across West London</h1>
           <p className="text-xl text-gray-100 mb-8">Professional deep clean to pass landlord inspections. Insured, guaranteed, and completed in 24-48 hours.</p>
           <div className="flex gap-4">
             <a href="/contact?enquiry=end-of-tenancy-quote" className="inline-block bg-[#D4A574] text-[#001F3F] font-semibold px-6 py-3 rounded hover:bg-yellow-600">Get a Quote</a>
