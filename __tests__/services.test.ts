@@ -7,15 +7,6 @@ import path from 'path';
  * Verifies all service pages are built, prerendered, and contain no broken internal links.
  */
 
-// Service pages list (referenced in EXPECTED_LINKS below)
-const _SERVICE_PAGES = [
-  '/services',
-  '/services/end-of-tenancy-cleaning',
-  '/services/deep-cleaning',
-  '/services/office-cleaning',
-  '/services/carpet-cleaning',
-];
-
 const EXPECTED_LINKS = {
   '/services': [
     '/services/end-of-tenancy-cleaning',
