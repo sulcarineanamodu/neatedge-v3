@@ -1,74 +1,115 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { validateEnquiry, enquirySubmissionSchema } from '@/lib/validation/enquiry';
+import { createLead, checkDuplicateSubmission } from '@/lib/db/leads';
 
-interface EnquiryData {
-  name: string;
-  email: string;
-  phone: string;
-  postcode: string;
-  message: string;
-  enquiryType: 'general' | 'residential-estimate' | 'commercial-survey' | 'property-partnership';
-  timestamp: string;
+// Rate limiting: track submissions by IP (in-memory for this demo)
+const submissionTracker = new Map<string, number[]>();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_MAX = 3; // Max 3 submissions per minute per IP
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const submissions = submissionTracker.get(ip) || [];
+
+  // Remove submissions outside the time window
+  const recentSubmissions = submissions.filter(t => now - t < RATE_LIMIT_WINDOW);
+
+  if (recentSubmissions.length >= RATE_LIMIT_MAX) {
+    return false;
+  }
+
+  recentSubmissions.push(now);
+  submissionTracker.set(ip, recentSubmissions);
+  return true;
 }
-
-// In-memory lead storage (replace with database in production)
-const leads: EnquiryData[] = [];
 
 export async function POST(request: NextRequest) {
   try {
-    const data: EnquiryData = await request.json();
+    // Get client IP
+    const ip = request.headers.get('x-forwarded-for') ||
+               request.headers.get('x-real-ip') ||
+               'unknown';
 
-    // Validate required fields
-    if (!data.name || !data.email || !data.phone || !data.postcode) {
+    // Check rate limit
+    if (!checkRateLimit(ip)) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Too many enquiries. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
+    // Check request size (max 10KB)
+    const contentLength = request.headers.get('content-length');
+    if (contentLength && parseInt(contentLength) > 10240) {
+      return NextResponse.json(
+        { error: 'Request too large' },
+        { status: 413 }
+      );
+    }
+
+    // Parse and validate
+    let rawData;
+    try {
+      rawData = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON' },
         { status: 400 }
       );
     }
 
-    // Store lead
-    leads.push(data);
+    const validation = enquirySubmissionSchema.safeParse(rawData);
 
-    // Log to console (in production, send to email service & database)
-    console.log(`[LEAD] ${data.enquiryType} - ${data.name} (${data.email})`);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: 'Invalid enquiry data' },
+        { status: 400 }
+      );
+    }
 
-    // TODO: Integrate email service (SendGrid, Mailgun, etc.)
-    // const confirmationMsg = getConfirmationMessage(data);
-    // await sendEmail({
-    //   to: data.email,
-    //   subject: confirmationMsg.subject,
-    //   html: confirmationMsg.html,
-    // });
+    const data = validation.data;
+
+    // Check for duplicate submissions
+    const isDuplicate = await checkDuplicateSubmission(data.email);
+    if (isDuplicate) {
+      return NextResponse.json(
+        { error: 'Enquiry already submitted recently. Please wait before submitting again.' },
+        { status: 429 }
+      );
+    }
+
+    // Get page URL
+    const pageUrl = request.headers.get('referer') || 'unknown';
+
+    // Store in database
+    const result = await createLead(data, pageUrl, ip);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Failed to process enquiry' },
+        { status: 500 }
+      );
+    }
+
+    // Log submission (sanitized)
+    console.log(`[LEAD_SUBMITTED] Type: ${data.enquiryType}, Method: ${data.preferredContactMethod}`);
+
+    // TODO: Send confirmation email via SendGrid/Mailgun
+    // TODO: Send internal notification
 
     return NextResponse.json(
       {
         success: true,
-        message: 'Enquiry received. Confirmation sent to your email.',
-        leadId: leads.length,
+        message: 'Thanks for your enquiry. We'll be in touch within 24 hours.',
+        leadId: result.leadId,
       },
       { status: 200 }
     );
   } catch (error) {
     console.error('[ENQUIRY_ERROR]', error);
     return NextResponse.json(
-      { error: 'Failed to process enquiry' },
+      { error: 'Unable to process your enquiry. Please try again or call us directly.' },
       { status: 500 }
     );
   }
-}
-
-// GET endpoint to retrieve leads (for admin dashboard - implement auth in production)
-export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  
-  if (authHeader !== `Bearer ${process.env.ADMIN_SECRET}`) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    );
-  }
-
-  return NextResponse.json({
-    totalLeads: leads.length,
-    leads: leads.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()),
-  });
 }
