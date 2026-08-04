@@ -113,12 +113,12 @@ CREATE INDEX idx_leads_email_attempted_at ON public.leads(email_attempted_at DES
 
 **Local Development** (`.env.local`):
 ```
-RESEND_API_KEY=re_AKBiPeKo_sNrQ939Lf5667x2Fr7g6ymuQ
+RESEND_API_KEY=re_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 **Vercel Production** (via Vercel Settings → Environment Variables):
 ```
-RESEND_API_KEY=re_AKBiPeKo_sNrQ939Lf5667x2Fr7g6ymuQ
+RESEND_API_KEY=re_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 **Important:** Never prefix with `NEXT_PUBLIC_` (would expose API key to browser)
