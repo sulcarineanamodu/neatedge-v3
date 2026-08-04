@@ -71,9 +71,9 @@ export default function ContactPage() {
       case 'commercial-survey':
         return 'Schedule a free site survey for your office or commercial space.';
       case 'property-partnership':
-        return 'Let's discuss how we can support your property business.';
+        return "Let's discuss how we can support your property business.";
       default:
-        return 'Have a question? Get in touch and we'll respond within 24 hours.';
+        return "Have a question? Get in touch and we'll respond within 24 hours.";
     }
   };
 
