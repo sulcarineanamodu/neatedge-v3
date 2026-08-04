@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: 'Thanks for your enquiry. We'll be in touch within 24 hours.',
+        message: "Thanks for your enquiry. We'll be in touch within 24 hours.",
         leadId: result.leadId,
       },
       { status: 200 }

@@ -13,13 +13,18 @@ export default function ContactPage() {
     phone: '',
     postcode: '',
     message: '',
+    privacyConsent: false,
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      setFormData(prev => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,9 +37,13 @@ export default function ContactPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          name: formData.name,
+          email: formData.email,
+          telephone: formData.phone,
+          postcode: formData.postcode,
+          message: formData.message,
+          privacyConsent: formData.privacyConsent,
           enquiryType,
-          timestamp: new Date().toISOString(),
         }),
       });
 
@@ -43,7 +52,7 @@ export default function ContactPage() {
       }
 
       setStatus('success');
-      setFormData({ name: '', email: '', phone: '', postcode: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', postcode: '', message: '', privacyConsent: false });
       setTimeout(() => setStatus('idle'), 5000);
     } catch (error) {
       setStatus('error');
@@ -180,9 +189,23 @@ export default function ContactPage() {
               </div>
             )}
 
+            <div className="flex items-start">
+              <input
+                type="checkbox"
+                name="privacyConsent"
+                checked={formData.privacyConsent}
+                onChange={handleChange}
+                required
+                className="mt-1 w-4 h-4 border border-gray-300 rounded focus:outline-none focus:border-[#D4A574]"
+              />
+              <label className="ml-3 text-sm text-gray-700">
+                I agree to the privacy policy and consent to being contacted about my enquiry *
+              </label>
+            </div>
+
             <button
               type="submit"
-              disabled={status === 'loading'}
+              disabled={status === 'loading' || !formData.privacyConsent}
               className="w-full bg-[#D4A574] text-[#001F3F] font-bold py-3 rounded hover:bg-yellow-600 disabled:opacity-50"
             >
               {status === 'loading' ? 'Sending...' : 'Send Enquiry'}

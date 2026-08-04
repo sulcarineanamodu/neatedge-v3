@@ -81,10 +81,15 @@ export async function createLead(
       .single();
 
     if (error) {
-      console.error('[DB_ERROR] Insert failed:', error.message);
+      console.error('[DB_ERROR]', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      });
       return {
         success: false,
-        error: 'Failed to store enquiry',
+        error: 'We could not save your enquiry.',
         leadId: null,
       };
     }
@@ -120,7 +125,12 @@ export async function checkDuplicateSubmission(
       .limit(1);
 
     if (error) {
-      console.error('[DB_ERROR] Duplicate check failed:', error.message);
+      console.error('[DB_ERROR] Duplicate check:', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      });
       return false;
     }
 
