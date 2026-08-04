@@ -7,14 +7,6 @@ import path from 'path';
  * Validates all service pages: HTTP 200, no prohibited content
  */
 
-const ROUTES = [
-  'services',
-  'services/end-of-tenancy-cleaning',
-  'services/deep-cleaning',
-  'services/office-cleaning',
-  'services/carpet-cleaning',
-];
-
 const PROHIBITED_PATTERNS = [
   /gets you your deposit back/i,
   /guarantees? you.*deposit/i,
@@ -41,7 +33,7 @@ describe('Service Pages Smoke Test', () => {
       'services/carpet-cleaning': 'src/app/services/carpet-cleaning/page.tsx',
     };
 
-    for (const [route, filePath] of Object.entries(pageMap)) {
+    for (const [_route, filePath] of Object.entries(pageMap)) {
       const fullPath = path.join(process.cwd(), filePath);
 
       // Verify file exists (HTTP 200 equivalent)

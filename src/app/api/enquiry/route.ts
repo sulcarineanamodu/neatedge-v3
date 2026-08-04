@@ -31,10 +31,8 @@ export async function POST(request: NextRequest) {
     // Log to console (in production, send to email service & database)
     console.log(`[LEAD] ${data.enquiryType} - ${data.name} (${data.email})`);
 
-    // Send confirmation message
-    const confirmationMsg = getConfirmationMessage(data);
-    
     // TODO: Integrate email service (SendGrid, Mailgun, etc.)
+    // const confirmationMsg = getConfirmationMessage(data);
     // await sendEmail({
     //   to: data.email,
     //   subject: confirmationMsg.subject,
@@ -66,11 +64,12 @@ function getConfirmationMessage(data: EnquiryData) {
     'property-partnership': 'Property Partnership',
   };
 
+  const label = typeLabels[data.enquiryType] || 'Enquiry';
   return {
-    subject: `Thanks for your ${typeLabels[data.enquiryType]} - Neatedge Cleaning`,
+    subject: `Thanks for your ${label} - Neatedge Cleaning`,
     html: `
       <h2>Thanks, ${data.name}!</h2>
-      <p>We've received your ${typeLabels[data.enquiryType].toLowerCase()} and will be in touch within 24 hours.</p>
+      <p>We've received your ${label.toLowerCase()} and will be in touch within 24 hours.</p>
       <p><strong>Your Reference:</strong> #${leads.length}</p>
       <p><strong>Contact Details:</strong></p>
       <ul>
