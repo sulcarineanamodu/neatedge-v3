@@ -8,7 +8,6 @@ import { getRobotsObject } from '@/lib/environment';
 import '@/styles/globals.css';
 
 const seoMetadata = generateSeoMetadata();
-const robotsObject = getRobotsObject();
 
 export const metadata: Metadata = {
   title: seoMetadata.title,
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: seoMetadata.canonical,
   },
-  robots: robotsObject,
+  robots: getRobotsObject() as any,
   openGraph: {
     title: seoMetadata.title,
     description: seoMetadata.description,
