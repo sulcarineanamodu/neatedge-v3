@@ -14,7 +14,6 @@ export default function QuickContactActions({
   const [loading, setLoading] = useState(false);
   const [showNoteForm, setShowNoteForm] = useState(false);
   const [notes, setNotes] = useState('');
-  const [selectedMethod, setSelectedMethod] = useState<string>('');
 
   const methods = [
     { value: 'phone_call', label: '📞 Phone Call' },
@@ -26,7 +25,6 @@ export default function QuickContactActions({
 
   const handleQuickContact = async (method: string) => {
     setLoading(true);
-    setSelectedMethod(method);
 
     try {
       const response = await fetch('/api/admin/leads/contact-history', {
@@ -42,7 +40,6 @@ export default function QuickContactActions({
       if (!response.ok) throw new Error('Failed to record contact');
 
       onSuccess();
-      setSelectedMethod('');
     } catch (error) {
       console.error('Error recording contact:', error);
       alert('Failed to record contact');

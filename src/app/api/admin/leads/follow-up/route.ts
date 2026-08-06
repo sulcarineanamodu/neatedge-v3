@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         .from('contact_history')
         .insert({
           lead_id: leadId,
-          admin_id: user.id,
+          admin_id: admin.id,
           contact_method: 'note',
           notes,
         });
