@@ -84,7 +84,7 @@ function LeadRow({ lead }: { lead: any }) {
       <td className="py-3 px-4 text-sm text-gray-600">{formatDate(lead.created_at)}</td>
       <td className="py-3 px-4 text-sm font-medium text-navy">{lead.name}</td>
       <td className="py-3 px-4 text-sm text-blue-600">
-        <a
+        
           href={`mailto:${lead.email}`}
           onClick={(e: MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
           className="hover:underline"
@@ -93,7 +93,7 @@ function LeadRow({ lead }: { lead: any }) {
         </a>
       </td>
       <td className="py-3 px-4 text-sm text-blue-600">
-        <a
+        
           href={`tel:${lead.telephone}`}
           onClick={(e: MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
           className="hover:underline"
