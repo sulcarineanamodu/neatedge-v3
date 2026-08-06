@@ -13,13 +13,6 @@ interface LeadTableProps {
   onPageChange?: (page: number) => void;
 }
 
-function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('en-GB', {
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
 function getDisplayReference(lead: any): string {
   // Use reference field if it exists, otherwise generate from ID
   return (
