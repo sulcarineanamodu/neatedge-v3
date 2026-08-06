@@ -1,4 +1,8 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import type { KeyboardEvent, MouseEvent } from 'react';
 import StatusBadge from './StatusBadge';
 
 interface LeadTableProps {
@@ -14,6 +18,94 @@ function formatDate(date: string): string {
     month: 'short',
     day: 'numeric',
   });
+}
+
+function getDisplayReference(lead: any): string {
+  // Use reference field if it exists, otherwise generate from ID
+  return (
+    lead.reference ??
+    lead.lead_reference ??
+    `NE-${lead.id.slice(0, 8).toUpperCase()}`
+  );
+}
+
+function LeadRow({ lead }: { lead: any }) {
+  const router = useRouter();
+  const href = `/admin/leads/${lead.id}`;
+  const displayRef = getDisplayReference(lead);
+
+  const openLead = () => {
+    router.push(href);
+  };
+
+  const handleRowClick = (e: MouseEvent<HTMLTableRowElement>) => {
+    // Don't navigate if clicking on an interactive element
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a') || target.closest('button')) {
+      return;
+    }
+    openLead();
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTableRowElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openLead();
+    }
+  };
+
+  return (
+    <tr
+      tabIndex={0}
+      onClick={handleRowClick}
+      onKeyDown={handleKeyDown}
+      aria-label={`View lead ${displayRef}`}
+      className="
+        border-b border-gray-200
+        cursor-pointer
+        transition-colors
+        hover:bg-gray-100
+        focus-visible:outline-none
+        focus-visible:ring-2
+        focus-visible:ring-inset
+        focus-visible:ring-blue-500
+      "
+    >
+      <td className="py-3 px-4">
+        <Link
+          href={href}
+          onClick={(e: MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
+          onKeyDown={(e: KeyboardEvent<HTMLAnchorElement>) => e.stopPropagation()}
+          className="font-medium text-blue-600 hover:underline text-sm"
+        >
+          {displayRef}
+        </Link>
+      </td>
+      <td className="py-3 px-4 text-sm text-gray-600">{formatDate(lead.created_at)}</td>
+      <td className="py-3 px-4 text-sm font-medium text-navy">{lead.name}</td>
+      <td className="py-3 px-4 text-sm text-blue-600">
+        <a
+          href={`mailto:${lead.email}`}
+          onClick={(e: MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
+          className="hover:underline"
+        >
+          {lead.email}
+        </a>
+      </td>
+      <td className="py-3 px-4 text-sm text-blue-600">
+        <a
+          href={`tel:${lead.telephone}`}
+          onClick={(e: MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
+          className="hover:underline"
+        >
+          {lead.telephone}
+        </a>
+      </td>
+      <td className="py-3 px-4" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+        <StatusBadge status={lead.status} />
+      </td>
+    </tr>
+  );
 }
 
 export default function LeadTable({
@@ -40,24 +132,7 @@ export default function LeadTable({
           </thead>
           <tbody>
             {leads.map((lead) => (
-              <tr key={lead.id} className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="py-3 px-4">
-                  <Link href={`/admin/leads/${lead.id}`} className="text-blue-600 hover:underline font-medium text-sm">
-                    {lead.reference}
-                  </Link>
-                </td>
-                <td className="py-3 px-4 text-sm text-gray-600">{formatDate(lead.created_at)}</td>
-                <td className="py-3 px-4 text-sm font-medium text-navy">{lead.name}</td>
-                <td className="py-3 px-4 text-sm text-blue-600">
-                  <a href={`mailto:${lead.email}`}>{lead.email}</a>
-                </td>
-                <td className="py-3 px-4 text-sm text-blue-600">
-                  <a href={`tel:${lead.telephone}`}>{lead.telephone}</a>
-                </td>
-                <td className="py-3 px-4">
-                  <StatusBadge status={lead.status} />
-                </td>
-              </tr>
+              <LeadRow key={lead.id} lead={lead} />
             ))}
           </tbody>
         </table>
