@@ -1,7 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import StatusBadge from './StatusBadge';
 import LeadStatusControl from './LeadStatusControl';
+import FollowUpModal from './FollowUpModal';
+import ContactHistory from './ContactHistory';
 
 interface LeadDetailContentProps {
   lead: any;
@@ -31,6 +34,17 @@ function formatEnquiryType(type: string): string {
 }
 
 export default function LeadDetailContent({ lead, activity }: LeadDetailContentProps) {
+  const [showFollowUpModal, setShowFollowUpModal] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const isOverdue = lead.follow_up_at && new Date(lead.follow_up_at) < new Date();
+  const isDueToday = lead.follow_up_at &&
+    new Date(lead.follow_up_at).toDateString() === new Date().toDateString();
+
+  const handleFollowUpSuccess = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -198,6 +212,60 @@ export default function LeadDetailContent({ lead, activity }: LeadDetailContentP
         )}
       </div>
 
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-navy">Follow-up Schedule</h2>
+          <button
+            onClick={() => setShowFollowUpModal(true)}
+            className="px-4 py-2 bg-navy text-white text-sm rounded-lg hover:bg-navy/90"
+          >
+            Schedule Follow-up
+          </button>
+        </div>
+
+        {lead.follow_up_at ? (
+          <div className="space-y-3">
+            <div className={`p-4 rounded-lg border-2 ${
+              isOverdue
+                ? 'bg-red-50 border-red-300'
+                : isDueToday
+                ? 'bg-yellow-50 border-yellow-300'
+                : 'bg-blue-50 border-blue-300'
+            }`}>
+              <p className="text-xs text-gray-600 uppercase tracking-wide mb-1">Scheduled Follow-up</p>
+              <p className={`text-lg font-medium ${
+                isOverdue
+                  ? 'text-red-700'
+                  : isDueToday
+                  ? 'text-yellow-700'
+                  : 'text-blue-700'
+              }`}>
+                {formatDate(lead.follow_up_at)}
+              </p>
+              {isOverdue && (
+                <p className="text-sm text-red-600 mt-2">⚠️ OVERDUE - Immediate follow-up required</p>
+              )}
+              {isDueToday && (
+                <p className="text-sm text-yellow-600 mt-2">📌 DUE TODAY</p>
+              )}
+            </div>
+            {lead.last_contacted_at && (
+              <div>
+                <p className="text-xs text-gray-600 uppercase tracking-wide mb-1">Last Contacted</p>
+                <p className="text-sm text-gray-700">{formatDate(lead.last_contacted_at)}</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className="text-gray-600 text-sm">No follow-up scheduled</p>
+        )}
+      </div>
+
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 className="text-lg font-semibold text-navy mb-4">Contact History</h2>
+        <ContactHistory key={refreshKey} leadId={lead.id} />
+      </div>
+
       {activity && activity.length > 0 && (
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-navy mb-4">Activity Timeline</h2>
@@ -222,6 +290,13 @@ export default function LeadDetailContent({ lead, activity }: LeadDetailContentP
           </div>
         </div>
       )}
+
+      <FollowUpModal
+        leadId={lead.id}
+        isOpen={showFollowUpModal}
+        onClose={() => setShowFollowUpModal(false)}
+        onSuccess={handleFollowUpSuccess}
+      />
     </div>
   );
 }
