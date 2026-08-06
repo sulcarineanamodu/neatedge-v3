@@ -81,7 +81,26 @@ function LeadRow({ lead }: { lead: any }) {
           {displayRef}
         </Link>
       </td>
-      <td className="py-3 px-4 text-sm text-gray-600">{formatDate(lead.created_at)}</td>
+      <td className="py-3 px-4 text-xs space-x-1 flex flex-wrap gap-1">
+        {lead.follow_up_at && new Date(lead.follow_up_at) < new Date() && (
+          <span className="inline-block px-2 py-1 bg-red-100 text-red-800 rounded">Overdue</span>
+        )}
+        {lead.follow_up_at && new Date(lead.follow_up_at).toDateString() === new Date().toDateString() && (
+          <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 rounded">Due Today</span>
+        )}
+        {lead.follow_up_at && new Date(lead.follow_up_at) > new Date() && new Date(lead.follow_up_at).toDateString() !== new Date().toDateString() && (
+          <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded">Scheduled</span>
+        )}
+        {!lead.assigned_to && (
+          <span className="inline-block px-2 py-1 bg-gray-100 text-gray-800 rounded">Unassigned</span>
+        )}
+        {lead.status === 'quote_sent' && (
+          <span className="inline-block px-2 py-1 bg-green-100 text-green-800 rounded">Quote</span>
+        )}
+        {lead.status === 'converted' && (
+          <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-800 rounded">Converted</span>
+        )}
+      </td>
       <td className="py-3 px-4 text-sm font-medium text-navy">{lead.name}</td>
       <td className="py-3 px-4 text-sm text-blue-600">
         <a
@@ -123,7 +142,7 @@ export default function LeadTable({
           <thead>
             <tr className="border-b border-gray-200">
               <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700">Ref</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700">Date</th>
+              <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700">Indicators</th>
               <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700">Name</th>
               <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700">Email</th>
               <th className="text-left py-3 px-4 font-semibold text-sm text-gray-700">Phone</th>
