@@ -1,46 +1,27 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/admin/auth';
+import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: NextRequest) {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
   try {
-    // Check if user is authenticated and is admin
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    const admin = await requireAdmin();
+    if (!admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Verify admin status
-    const { data: adminProfile } = await supabase
-      .from('admin_profiles')
-      .select('role')
-      .eq('user_id', user.id)
-      .single();
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!adminProfile || adminProfile.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!url || !serviceKey) {
+      return NextResponse.json(
+        { error: 'Missing Supabase configuration' },
+        { status: 500 }
+      );
     }
+
+    const supabase = createClient(url, serviceKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
 
     const body = await request.json();
     const { leadId, followUpAt, assignedTo, notes } = body;
@@ -92,7 +73,7 @@ export async function POST(request: NextRequest) {
 
     // Log to audit trail
     await supabase.from('audit_log').insert({
-      admin_id: user.id,
+      admin_id: admin.id,
       action: 'schedule_follow_up',
       resource_type: 'lead',
       resource_id: leadId,
@@ -117,44 +98,25 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
   try {
-    // Check if user is authenticated and is admin
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    const admin = await requireAdmin();
+    if (!admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Verify admin status
-    const { data: adminProfile } = await supabase
-      .from('admin_profiles')
-      .select('role')
-      .eq('user_id', user.id)
-      .single();
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!adminProfile || adminProfile.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!url || !serviceKey) {
+      return NextResponse.json(
+        { error: 'Missing Supabase configuration' },
+        { status: 500 }
+      );
     }
+
+    const supabase = createClient(url, serviceKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
 
     const { searchParams } = new URL(request.url);
     const view = searchParams.get('view') || 'all';
