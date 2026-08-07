@@ -41,7 +41,6 @@ const DEFAULT_EMPLOYER_NI_RATE = 0.138; // 13.8%
 const DEFAULT_HOLIDAY_PAY_RATE = 0.1207; // 12.07%
 const COGS_PERCENTAGE = 0.45; // 45% of price
 const PROFIT_TARGET = 0.30; // 30% of price
-const OVERHEAD_PERCENTAGE = 0.25; // 25% of price
 
 /**
  * Calculate minimum viable quote using 45/25/30 formula

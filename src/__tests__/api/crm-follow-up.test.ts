@@ -40,7 +40,7 @@ describe('CRM Follow-up (Package 10.1)', () => {
         (lead) => lead.follow_up_at && new Date(lead.follow_up_at) < now
       );
       expect(overdue).toHaveLength(1);
-      expect(overdue[0].id).toBe('lead-1');
+      expect(overdue[0]!.id).toBe('lead-1');
     });
 
     it('should filter due-today leads', () => {
@@ -54,13 +54,13 @@ describe('CRM Follow-up (Package 10.1)', () => {
         return followUpDate >= today && followUpDate < tomorrow;
       });
       expect(dueToday).toHaveLength(1);
-      expect(dueToday[0].id).toBe('lead-2');
+      expect(dueToday[0]!.id).toBe('lead-2');
     });
 
     it('should filter leads with no follow-up', () => {
       const noFollowUp = mockLeads.filter((lead) => !lead.follow_up_at);
       expect(noFollowUp).toHaveLength(1);
-      expect(noFollowUp[0].id).toBe('lead-3');
+      expect(noFollowUp[0]!.id).toBe('lead-3');
     });
 
     it('should filter unassigned new leads', () => {
@@ -73,13 +73,13 @@ describe('CRM Follow-up (Package 10.1)', () => {
 
   describe('Lead Indicators', () => {
     it('should identify overdue status', () => {
-      const lead = mockLeads[0];
+      const lead = mockLeads[0]!;
       const isOverdue = lead.follow_up_at && new Date(lead.follow_up_at) < new Date();
       expect(isOverdue).toBe(true);
     });
 
     it('should identify due-today status', () => {
-      const lead = mockLeads[1];
+      const lead = mockLeads[1]!;
       const today = new Date();
       const isDueToday =
         lead.follow_up_at &&
@@ -88,7 +88,7 @@ describe('CRM Follow-up (Package 10.1)', () => {
     });
 
     it('should identify unassigned indicator', () => {
-      const lead = mockLeads[0];
+      const lead = mockLeads[0]!;
       expect(lead.assigned_to).toBeFalsy();
     });
   });
@@ -107,12 +107,12 @@ describe('CRM Follow-up (Package 10.1)', () => {
 
   describe('CRUD Operations', () => {
     it('should support team assignment', () => {
-      const lead = mockLeads[1];
+      const lead = mockLeads[1]!;
       expect(lead.assigned_to).toBeDefined();
     });
 
     it('should support follow-up scheduling', () => {
-      const lead = mockLeads[1];
+      const lead = mockLeads[1]!;
       expect(lead.follow_up_at).toBeDefined();
     });
   });

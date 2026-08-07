@@ -56,9 +56,9 @@ export default function GenerateQuoteModal({
   ) => {
     const updated = [...lineItems];
     if (field === 'quantity' || field === 'unitPrice') {
-      updated[index][field] = parseFloat(value as string) || 0;
+      updated[index]![field] = parseFloat(value as string) || 0;
     } else {
-      updated[index][field] = value as string;
+      updated[index]![field] = value as string;
     }
     setLineItems(updated);
   };

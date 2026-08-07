@@ -55,8 +55,8 @@ export async function POST(request: NextRequest) {
       .limit(1);
 
     let nextNumber = 1;
-    if (lastQuote && lastQuote.length > 0) {
-      const lastNumber = parseInt(lastQuote[0].quote_number.split('-')[2]);
+    if (lastQuote && lastQuote.length > 0 && lastQuote[0]) {
+      const lastNumber = parseInt(lastQuote[0]!.quote_number.split('-')[2]);
       nextNumber = lastNumber + 1;
     }
 
