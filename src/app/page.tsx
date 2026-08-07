@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/Button';
-import Card, { CardBody } from '@/components/Card';
-import { getFeatureFlags } from '@/lib/features';
 
 /**
  * Premium Homepage — Neatedge
@@ -13,7 +11,6 @@ import { getFeatureFlags } from '@/lib/features';
  * 70% cleaning company | 20% luxury property brand | 10% modern tech
  */
 export default function Home() {
-  const flags = getFeatureFlags();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
