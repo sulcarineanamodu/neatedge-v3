@@ -25,10 +25,10 @@ CREATE TABLE IF NOT EXISTS public.contact_history (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_contact_history_lead_id ON public.contact_history(lead_id);
-CREATE INDEX idx_contact_history_admin_id ON public.contact_history(admin_id);
-CREATE INDEX idx_contact_history_created_at ON public.contact_history(created_at DESC);
-CREATE INDEX idx_contact_history_method ON public.contact_history(contact_method);
+CREATE INDEX IF NOT EXISTS idx_contact_history_lead_id ON public.contact_history(lead_id);
+CREATE INDEX IF NOT EXISTS idx_contact_history_admin_id ON public.contact_history(admin_id);
+CREATE INDEX IF NOT EXISTS idx_contact_history_created_at ON public.contact_history(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_contact_history_method ON public.contact_history(contact_method);
 
 -- ============================================================================
 -- FOLLOW-UP REMINDERS TABLE
@@ -46,10 +46,10 @@ CREATE TABLE IF NOT EXISTS public.follow_up_reminders (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_follow_up_reminders_lead_id ON public.follow_up_reminders(lead_id);
-CREATE INDEX idx_follow_up_reminders_follow_up_at ON public.follow_up_reminders(follow_up_at);
-CREATE INDEX idx_follow_up_reminders_assigned_to ON public.follow_up_reminders(assigned_to);
-CREATE INDEX idx_follow_up_reminders_reminder_sent_at ON public.follow_up_reminders(reminder_sent_at);
+CREATE INDEX IF NOT EXISTS idx_follow_up_reminders_lead_id ON public.follow_up_reminders(lead_id);
+CREATE INDEX IF NOT EXISTS idx_follow_up_reminders_follow_up_at ON public.follow_up_reminders(follow_up_at);
+CREATE INDEX IF NOT EXISTS idx_follow_up_reminders_assigned_to ON public.follow_up_reminders(assigned_to);
+CREATE INDEX IF NOT EXISTS idx_follow_up_reminders_reminder_sent_at ON public.follow_up_reminders(reminder_sent_at);
 
 -- ============================================================================
 -- TEAM MEMBERS TABLE
@@ -69,9 +69,9 @@ CREATE TABLE IF NOT EXISTS public.team_members (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_team_members_user_id ON public.team_members(user_id);
-CREATE INDEX idx_team_members_email ON public.team_members(email);
-CREATE INDEX idx_team_members_active ON public.team_members(active);
+CREATE INDEX IF NOT EXISTS idx_team_members_user_id ON public.team_members(user_id);
+CREATE INDEX IF NOT EXISTS idx_team_members_email ON public.team_members(email);
+CREATE INDEX IF NOT EXISTS idx_team_members_active ON public.team_members(active);
 
 -- ============================================================================
 -- ENABLE RLS ON NEW TABLES

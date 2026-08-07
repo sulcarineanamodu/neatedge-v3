@@ -47,10 +47,10 @@ CREATE TABLE IF NOT EXISTS public.quotes (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
-CREATE INDEX idx_quotes_lead_id ON public.quotes(lead_id);
-CREATE INDEX idx_quotes_status ON public.quotes(status);
-CREATE INDEX idx_quotes_created_at ON public.quotes(created_at DESC);
-CREATE INDEX idx_quotes_quote_number ON public.quotes(quote_number);
+CREATE INDEX IF NOT EXISTS idx_quotes_lead_id ON public.quotes(lead_id);
+CREATE INDEX IF NOT EXISTS idx_quotes_status ON public.quotes(status);
+CREATE INDEX IF NOT EXISTS idx_quotes_created_at ON public.quotes(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_quotes_quote_number ON public.quotes(quote_number);
 
 -- ============================================================================
 -- QUOTE RESPONSES TABLE
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS public.quote_responses (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 
-CREATE INDEX idx_quote_responses_quote_id ON public.quote_responses(quote_id);
+CREATE INDEX IF NOT EXISTS idx_quote_responses_quote_id ON public.quote_responses(quote_id);
 
 -- ============================================================================
 -- ENABLE RLS

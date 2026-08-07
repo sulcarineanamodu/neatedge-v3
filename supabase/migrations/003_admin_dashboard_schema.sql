@@ -15,9 +15,9 @@ create table if not exists public.admin_profiles (
   updated_at timestamp with time zone not null default now()
 );
 
-create index idx_admin_profiles_user_id on public.admin_profiles(user_id);
-create index idx_admin_profiles_role on public.admin_profiles(role);
-create index idx_admin_profiles_status on public.admin_profiles(status);
+create index if not exists idx_admin_profiles_user_id on public.admin_profiles(user_id);
+create index if not exists idx_admin_profiles_role on public.admin_profiles(role);
+create index if not exists idx_admin_profiles_status on public.admin_profiles(status);
 
 -- ============================================================================
 -- LEAD ACTIVITY TABLE
@@ -34,10 +34,10 @@ create table if not exists public.lead_activity (
   created_at timestamp with time zone not null default now()
 );
 
-create index idx_lead_activity_lead_id on public.lead_activity(lead_id);
-create index idx_lead_activity_admin_id on public.lead_activity(admin_id);
-create index idx_lead_activity_action on public.lead_activity(action);
-create index idx_lead_activity_created_at on public.lead_activity(created_at desc);
+create index if not exists idx_lead_activity_lead_id on public.lead_activity(lead_id);
+create index if not exists idx_lead_activity_admin_id on public.lead_activity(admin_id);
+create index if not exists idx_lead_activity_action on public.lead_activity(action);
+create index if not exists idx_lead_activity_created_at on public.lead_activity(created_at desc);
 
 -- ============================================================================
 -- AUDIT LOG TABLE
@@ -57,10 +57,10 @@ create table if not exists public.audit_log (
   created_at timestamp with time zone not null default now()
 );
 
-create index idx_audit_log_admin_id on public.audit_log(admin_id);
-create index idx_audit_log_action on public.audit_log(action);
-create index idx_audit_log_created_at on public.audit_log(created_at desc);
-create index idx_audit_log_resource on public.audit_log(resource_type, resource_id);
+create index if not exists idx_audit_log_admin_id on public.audit_log(admin_id);
+create index if not exists idx_audit_log_action on public.audit_log(action);
+create index if not exists idx_audit_log_created_at on public.audit_log(created_at desc);
+create index if not exists idx_audit_log_resource on public.audit_log(resource_type, resource_id);
 
 -- ============================================================================
 -- ENHANCE LEADS TABLE WITH ADMIN FIELDS
