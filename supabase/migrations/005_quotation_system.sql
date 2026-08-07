@@ -75,24 +75,29 @@ ALTER TABLE public.quotes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.quote_responses ENABLE ROW LEVEL SECURITY;
 
 -- Quotes: Admin-only read/write
+DROP POLICY IF EXISTS "quotes_admin_read" ON public.quotes;
 CREATE POLICY "quotes_admin_read" ON public.quotes
   FOR SELECT
   USING (public.is_admin(auth.uid()));
 
+DROP POLICY IF EXISTS "quotes_admin_insert" ON public.quotes;
 CREATE POLICY "quotes_admin_insert" ON public.quotes
   FOR INSERT
   WITH CHECK (public.is_admin(auth.uid()));
 
+DROP POLICY IF EXISTS "quotes_admin_update" ON public.quotes;
 CREATE POLICY "quotes_admin_update" ON public.quotes
   FOR UPDATE
   USING (public.is_admin(auth.uid()))
   WITH CHECK (public.is_admin(auth.uid()));
 
 -- Quote responses: Public insert (unauthenticated), admin read
+DROP POLICY IF EXISTS "quote_responses_public_insert" ON public.quote_responses;
 CREATE POLICY "quote_responses_public_insert" ON public.quote_responses
   FOR INSERT
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS "quote_responses_admin_read" ON public.quote_responses;
 CREATE POLICY "quote_responses_admin_read" ON public.quote_responses
   FOR SELECT
   USING (public.is_admin(auth.uid()));

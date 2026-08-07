@@ -82,42 +82,51 @@ ALTER TABLE public.follow_up_reminders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
 
 -- Contact History: Only admins can read and insert
+DROP POLICY IF EXISTS "contact_history_admin_read" ON public.contact_history;
 CREATE POLICY "contact_history_admin_read" ON public.contact_history
   FOR SELECT
   USING (public.is_admin(auth.uid()));
 
+DROP POLICY IF EXISTS "contact_history_admin_insert" ON public.contact_history;
 CREATE POLICY "contact_history_admin_insert" ON public.contact_history
   FOR INSERT
   WITH CHECK (public.is_admin(auth.uid()));
 
+DROP POLICY IF EXISTS "contact_history_admin_update" ON public.contact_history;
 CREATE POLICY "contact_history_admin_update" ON public.contact_history
   FOR UPDATE
   USING (public.is_admin(auth.uid()))
   WITH CHECK (public.is_admin(auth.uid()));
 
 -- Follow-up Reminders: Only admins can read and insert
+DROP POLICY IF EXISTS "follow_up_reminders_admin_read" ON public.follow_up_reminders;
 CREATE POLICY "follow_up_reminders_admin_read" ON public.follow_up_reminders
   FOR SELECT
   USING (public.is_admin(auth.uid()));
 
+DROP POLICY IF EXISTS "follow_up_reminders_admin_insert" ON public.follow_up_reminders;
 CREATE POLICY "follow_up_reminders_admin_insert" ON public.follow_up_reminders
   FOR INSERT
   WITH CHECK (public.is_admin(auth.uid()));
 
+DROP POLICY IF EXISTS "follow_up_reminders_admin_update" ON public.follow_up_reminders;
 CREATE POLICY "follow_up_reminders_admin_update" ON public.follow_up_reminders
   FOR UPDATE
   USING (public.is_admin(auth.uid()))
   WITH CHECK (public.is_admin(auth.uid()));
 
 -- Team Members: Authenticated users can read, admins can insert/update
+DROP POLICY IF EXISTS "team_members_read" ON public.team_members;
 CREATE POLICY "team_members_read" ON public.team_members
   FOR SELECT
   USING (auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "team_members_admin_insert" ON public.team_members;
 CREATE POLICY "team_members_admin_insert" ON public.team_members
   FOR INSERT
   WITH CHECK (public.is_admin(auth.uid()));
 
+DROP POLICY IF EXISTS "team_members_admin_update" ON public.team_members;
 CREATE POLICY "team_members_admin_update" ON public.team_members
   FOR UPDATE
   USING (public.is_admin(auth.uid()))
