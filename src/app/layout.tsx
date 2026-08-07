@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import StagingBanner from '@/components/StagingBanner';
 import { generateMetadata as generateSeoMetadata } from '@/lib/seo';
 import { getRobotsObject } from '@/lib/environment';
@@ -48,7 +47,6 @@ export default function RootLayout({
         <StagingBanner />
         <Header />
         <main className="flex-grow">{children}</main>
-        <Footer />
       </body>
     </html>
   );
