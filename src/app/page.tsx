@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/Button';
@@ -9,6 +10,14 @@ import Button from '@/components/Button';
  * Premium Homepage — Neatedge
  * Cinematic design, professional imagery, premium interactions
  * 70% cleaning company | 20% luxury property brand | 10% modern tech
+ *
+ * Key fixes:
+ * - Hero H1 uses clamp() for responsive sizing (64px–72px desktop)
+ * - No text clipping with proper max-widths and padding
+ * - Framer Motion animations for premium feel
+ * - Fixed image layouts and fallbacks
+ * - Premium motion on scroll and hover
+ * - Responsive at all breakpoints (375px–1920px)
  */
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
@@ -66,8 +75,9 @@ export default function Home() {
         </div>
       </header>
 
-      {/* CINEMATIC HERO */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden pt-20">
+      {/* CINEMATIC HERO — FIXED LAYOUT & RESPONSIVE TYPOGRAPHY */}
+      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-28">
+        {/* Background image + overlay */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/image-hero.png"
@@ -75,27 +85,72 @@ export default function Home() {
             fill
             className="object-cover"
             priority
+            quality={85}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/80 via-brand-navy/60 to-brand-navy/40"></div>
+          {/* Premium gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/85 via-brand-navy/70 to-brand-navy/50"></div>
         </div>
 
-        <div className="relative z-10 max-w-container mx-auto px-md text-white">
-          <div className="max-w-3xl">
-            <div className="mb-md text-brand-gold font-semibold uppercase tracking-wide">
+        {/* Hero content — constrained width, proper padding */}
+        <motion.div
+          className="relative z-10 w-full px-md sm:px-lg md:px-xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="max-w-5xl mx-auto">
+            {/* Subheading */}
+            <motion.div
+              className="mb-lg sm:mb-xl text-brand-gold font-semibold uppercase tracking-widest text-xs sm:text-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
               Professional Cleaning • West London
-            </div>
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-lg leading-tight">
+            </motion.div>
+
+            {/* Main headline — clamp() for responsive sizing */}
+            <motion.h1
+              className="font-bold mb-lg sm:mb-xl leading-tight text-white"
+              style={{
+                fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', // 40px–72px responsive
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
               Professional Cleaning,
               <br />
               <span className="text-brand-gold">Delivered Properly</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-lg max-w-2xl text-grey-light">
+            </motion.h1>
+
+            {/* Supporting copy */}
+            <motion.p
+              className="text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
               Professional residential, commercial and property cleaning for homes, businesses, landlords and property professionals across West London.
-            </p>
-            <p className="text-lg mb-2xl text-brand-gold font-medium">
+            </motion.p>
+
+            {/* Service areas */}
+            <motion.p
+              className="text-sm sm:text-base mb-xl sm:mb-2xl text-brand-gold font-medium"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
               Serving Uxbridge • West Drayton • Hayes • Hillingdon • Heathrow Corridor
-            </p>
-            <div className="flex flex-col sm:flex-row gap-md">
+            </motion.p>
+
+            {/* CTA buttons */}
+            <motion.div
+              className="flex flex-col xs:flex-row gap-md sm:gap-lg"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
               <a href="/contact?enquiry=estimate" className="inline-block">
                 <Button variant="primary" size="lg">
                   Get a Cleaning Estimate
@@ -106,19 +161,23 @@ export default function Home() {
                   Book a Site Survey
                 </Button>
               </a>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 text-white animate-bounce">
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 text-white"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
           <div className="text-center">
-            <p className="text-sm mb-2">Scroll to explore</p>
-            <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <p className="text-xs sm:text-sm mb-2 opacity-80">Scroll to explore</p>
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* TRUST BAR - PREMIUM */}
@@ -149,153 +208,241 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SERVICES GRID - PREMIUM */}
-      <section className="py-3xl">
-        <div className="max-w-container mx-auto px-md">
-          <h2 className="text-5xl md:text-6xl font-bold mb-2xl text-brand-navy text-center">
-            Our Services
-          </h2>
+      {/* SERVICES GRID - PREMIUM REDESIGNED */}
+      <section className="py-3xl sm:py-4xl">
+        <div className="max-w-container mx-auto px-md sm:px-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-brand-navy text-center">
+              Our Services
+            </h2>
+          </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg mb-lg">
-            {/* Large left card */}
-            <div className="group cursor-pointer">
-              <div className="relative h-96 rounded-lg overflow-hidden mb-md shadow-lg">
+          {/* 2x2 service grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-lg md:gap-2xl">
+            {/* Card 1: Commercial */}
+            <motion.div
+              className="group cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
                 <Image
                   src="/image-office.png"
                   alt="Commercial cleaning"
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent flex items-end">
-                  <div className="p-lg text-white w-full">
-                    <h3 className="text-3xl font-bold mb-sm">Commercial Cleaning</h3>
-                    <p className="text-sm text-grey-light">Offices, retail, communal spaces</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/50 to-transparent flex items-end p-lg sm:p-2xl">
+                  <div className="text-white w-full">
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-sm">Commercial Cleaning</h3>
+                    <p className="text-sm sm:text-base text-grey-light">Offices, retail, communal spaces</p>
                   </div>
                 </div>
               </div>
-              <Link href="/commercial">
+              <Link href="/commercial" className="inline-block w-full">
                 <Button variant="secondary" className="w-full">
                   Explore Commercial →
                 </Button>
               </Link>
-            </div>
+            </motion.div>
 
-            {/* Right side - two stacked cards */}
-            <div className="space-y-lg">
-              <div className="group cursor-pointer">
-                <div className="relative h-40 rounded-lg overflow-hidden mb-md shadow-lg">
-                  <Image
-                    src="/image-retail.png"
-                    alt="Retail cleaning"
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent flex items-end">
-                    <div className="p-lg text-white w-full">
-                      <h3 className="text-xl font-bold">Residential Cleaning</h3>
-                    </div>
+            {/* Card 2: Residential */}
+            <motion.div
+              className="group cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
+                <Image
+                  src="/image-retail.png"
+                  alt="Residential cleaning"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/50 to-transparent flex items-end p-lg sm:p-2xl">
+                  <div className="text-white w-full">
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-sm">Residential Cleaning</h3>
+                    <p className="text-sm sm:text-base text-grey-light">Domestic, deep cleans, end of tenancy</p>
                   </div>
                 </div>
               </div>
+              <Link href="/residential" className="inline-block w-full">
+                <Button variant="secondary" className="w-full">
+                  Explore Residential →
+                </Button>
+              </Link>
+            </motion.div>
 
-              <div className="group cursor-pointer">
-                <div className="relative h-40 rounded-lg overflow-hidden mb-md shadow-lg">
-                  <Image
-                    src="/image-supplies.png"
-                    alt="Deep cleaning supplies"
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent flex items-end">
-                    <div className="p-lg text-white w-full">
-                      <h3 className="text-xl font-bold">Property Professional Support</h3>
-                    </div>
+            {/* Card 3: End of Tenancy */}
+            <motion.div
+              className="group cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
+                <Image
+                  src="/image-supplies.png"
+                  alt="End of tenancy cleaning"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/50 to-transparent flex items-end p-lg sm:p-2xl">
+                  <div className="text-white w-full">
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-sm">End of Tenancy</h3>
+                    <p className="text-sm sm:text-base text-grey-light">Professional property turnover cleaning</p>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
+
+            {/* Card 4: Property Professional */}
+            <motion.div
+              className="group cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
+                <Image
+                  src="/image-about.png"
+                  alt="Property professional support"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/50 to-transparent flex items-end p-lg sm:p-2xl">
+                  <div className="text-white w-full">
+                    <h3 className="text-2xl sm:text-3xl font-bold mb-sm">Property Professionals</h3>
+                    <p className="text-sm sm:text-base text-grey-light">Turnover & lettings support</p>
+                  </div>
+                </div>
+              </div>
+              <Link href="/property-professionals" className="inline-block w-full">
+                <Button variant="secondary" className="w-full">
+                  Learn More →
+                </Button>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* RESIDENTIAL / COMMERCIAL SPLIT */}
-      <section className="py-3xl bg-grey-light">
-        <div className="max-w-container mx-auto px-md">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2xl">
+      {/* RESIDENTIAL / COMMERCIAL SPLIT — PREMIUM */}
+      <section className="py-3xl sm:py-4xl bg-white">
+        <div className="max-w-container mx-auto px-md sm:px-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3xl lg:gap-4xl">
             {/* Residential */}
-            <div>
-              <div className="relative h-80 rounded-lg overflow-hidden mb-lg shadow-lg mb-lg">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden mb-lg sm:mb-xl shadow-2xl">
                 <Image
                   src="/image-hero.png"
-                  alt="Residential cleaning"
+                  alt="Professional residential cleaning team"
                   fill
-                  className="object-cover hover:scale-110 transition-transform duration-500"
+                  className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
-              <h3 className="text-3xl font-bold text-brand-navy mb-md">Residential Cleaning</h3>
-              <p className="text-body mb-lg text-grey-600">
+              <h3 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-md">Residential Cleaning</h3>
+              <p className="text-base text-grey-600 mb-lg sm:mb-xl leading-relaxed">
                 From regular domestic cleaning to deep cleans and end-of-tenancy work, we provide professional residential cleaning across West London.
               </p>
-              <Link href="/residential">
+              <Link href="/residential" className="inline-block w-full">
                 <Button variant="primary" size="md" className="w-full">
                   Explore Residential Services
                 </Button>
               </Link>
-            </div>
+            </motion.div>
 
             {/* Commercial */}
-            <div>
-              <div className="relative h-80 rounded-lg overflow-hidden mb-lg shadow-lg mb-lg">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden mb-lg sm:mb-xl shadow-2xl">
                 <Image
                   src="/image-office.png"
-                  alt="Commercial cleaning"
+                  alt="Professional commercial office cleaning"
                   fill
-                  className="object-cover hover:scale-110 transition-transform duration-500"
+                  className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
-              <h3 className="text-3xl font-bold text-brand-navy mb-md">Commercial Cleaning</h3>
-              <p className="text-body mb-lg text-grey-600">
+              <h3 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-md">Commercial Cleaning</h3>
+              <p className="text-base text-grey-600 mb-lg sm:mb-xl leading-relaxed">
                 Reliable cleaning support for offices, retail premises and commercial properties. Flexible schedules tailored to your business needs.
               </p>
-              <Link href="/commercial">
+              <Link href="/commercial" className="inline-block w-full">
                 <Button variant="primary" size="md" className="w-full">
                   Explore Commercial Services
                 </Button>
               </Link>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* PROPERTY PROFESSIONALS FEATURE */}
-      <section className="py-3xl bg-brand-navy text-white">
-        <div className="max-w-container mx-auto px-md">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2xl items-center">
-            <div>
-              <div className="text-brand-gold text-sm font-semibold mb-md uppercase tracking-wider">
+      {/* PROPERTY PROFESSIONALS FEATURE — REDESIGNED */}
+      <section className="py-3xl sm:py-4xl bg-brand-navy text-white">
+        <div className="max-w-container mx-auto px-md sm:px-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3xl lg:gap-4xl items-center">
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-brand-gold text-xs sm:text-sm font-semibold mb-md uppercase tracking-widest">
                 For Property Professionals
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-lg">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-lg sm:mb-xl leading-tight">
                 Cleaning Support Built Around Property Turnarounds
               </h2>
-              <p className="text-lg mb-lg text-grey-light">
+              <p className="text-base sm:text-lg mb-lg sm:mb-xl text-grey-light leading-relaxed">
                 Estate agents, letting agents, landlords, property managers and serviced accommodation operators rely on Neatedge for responsive, professional cleaning support.
               </p>
-              <div className="space-y-sm mb-2xl">
-                <p className="flex gap-md items-start">
-                  <span className="text-brand-gold text-xl">✓</span>
-                  <span>Property turnovers and end-of-tenancy cleaning</span>
-                </p>
-                <p className="flex gap-md items-start">
-                  <span className="text-brand-gold text-xl">✓</span>
-                  <span>Airbnb and serviced accommodation support</span>
-                </p>
-                <p className="flex gap-md items-start">
-                  <span className="text-brand-gold text-xl">✓</span>
-                  <span>Consolidated communication and flexible scheduling</span>
-                </p>
+
+              {/* Benefits list */}
+              <div className="space-y-md mb-2xl sm:mb-3xl">
+                {['Property turnovers and end-of-tenancy cleaning', 'Airbnb and serviced accommodation support', 'Consolidated communication and flexible scheduling'].map((benefit, idx) => (
+                  <motion.p
+                    key={idx}
+                    className="flex gap-md items-start"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <span className="text-brand-gold text-xl mt-0.5 flex-shrink-0">✓</span>
+                    <span className="text-base text-grey-light">{benefit}</span>
+                  </motion.p>
+                ))}
               </div>
-              <div className="flex flex-col sm:flex-row gap-md">
+
+              {/* CTA buttons */}
+              <div className="flex flex-col xs:flex-row gap-md">
                 <Link href="/contact?enquiry=property-partnership">
                   <Button variant="primary" size="md">
                     Discuss a Partnership
@@ -307,51 +454,92 @@ export default function Home() {
                   </Button>
                 </Link>
               </div>
-            </div>
-            <div className="relative h-96 rounded-lg overflow-hidden shadow-2xl">
+            </motion.div>
+
+            {/* Image */}
+            <motion.div
+              className="relative h-80 sm:h-96 rounded-2xl overflow-hidden shadow-2xl"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
               <Image
                 src="/image-about.png"
-                alt="Property professional partnership"
+                alt="Property professional partnership — modern property"
                 fill
-                className="object-cover"
+                className="object-cover hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS - TIMELINE */}
-      <section className="py-3xl">
-        <div className="max-w-container mx-auto px-md">
-          <h2 className="text-5xl md:text-6xl font-bold mb-2xl text-brand-navy text-center">
-            How It Works
-          </h2>
+      {/* HOW IT WORKS - PREMIUM TIMELINE */}
+      <section className="py-3xl sm:py-4xl bg-gradient-to-b from-grey-light to-white">
+        <div className="max-w-container mx-auto px-md sm:px-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-brand-navy text-center">
+              How It Works
+            </h2>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-lg mb-2xl">
+          {/* Timeline grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-md md:gap-lg">
             {[
               { step: '01', title: 'Tell Us What You Need', desc: 'Describe your property, cleaning type and requirements' },
               { step: '02', title: 'Receive Your Estimate', desc: 'We review and provide a clear, transparent quotation' },
               { step: '03', title: 'Confirm the Service', desc: 'Review and schedule your preferred cleaning date' },
               { step: '04', title: 'We Complete the Job', desc: 'Professional cleaning with full communication' },
             ].map((item, idx) => (
-              <div key={idx} className="text-center">
-                <div className="text-5xl font-bold text-brand-gold mb-md">{item.step}</div>
-                <h3 className="text-xl font-bold text-brand-navy mb-sm">{item.title}</h3>
-                <p className="text-sm text-grey-600">{item.desc}</p>
-              </div>
+              <motion.div
+                key={idx}
+                className="relative text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+              >
+                {/* Timeline connector line (desktop only) */}
+                {idx < 3 && (
+                  <div className="hidden md:block absolute top-12 left-[60%] w-[40%] h-0.5 bg-gradient-to-r from-brand-gold/60 to-brand-gold/20"></div>
+                )}
+
+                {/* Step number circle */}
+                <div className="relative z-10 inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-brand-gold to-brand-gold/80 text-brand-navy font-bold mb-lg mx-auto">
+                  <span className="text-4xl font-bold">{item.step}</span>
+                </div>
+
+                {/* Content */}
+                <h3 className="text-lg sm:text-xl font-bold text-brand-navy mb-md">{item.title}</h3>
+                <p className="text-sm text-grey-600 leading-relaxed">{item.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* WHY NEATEDGE - DARK SECTION */}
-      <section className="py-3xl bg-brand-navy text-white">
-        <div className="max-w-container mx-auto px-md">
-          <h2 className="text-5xl md:text-6xl font-bold mb-2xl text-center">
-            Why Choose Neatedge?
-          </h2>
+      {/* WHY CHOOSE NEATEDGE - PREMIUM DARK SECTION */}
+      <section className="py-3xl sm:py-4xl bg-brand-navy text-white">
+        <div className="max-w-container mx-auto px-md sm:px-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-center">
+              Why Choose Neatedge?
+            </h2>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg md:gap-2xl">
             {[
               { title: 'Professional Standards', desc: 'Documented processes, consistent quality, full accountability' },
               { title: 'Clear Communication', desc: 'Transparent quotes, responsive updates, no hidden costs' },
@@ -360,37 +548,65 @@ export default function Home() {
               { title: 'Insurance & Security', desc: '£5M public liability insurance and professional credentials' },
               { title: 'Founder-Led', desc: 'Personal accountability and direct oversight of quality' },
             ].map((item, idx) => (
-              <div key={idx} className="border-l-4 border-brand-gold pl-lg">
-                <h3 className="text-xl font-bold mb-sm">{item.title}</h3>
-                <p className="text-grey-light text-sm">{item.desc}</p>
-              </div>
+              <motion.div
+                key={idx}
+                className="border-l-4 border-brand-gold pl-lg sm:pl-2xl py-md"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-lg sm:text-xl font-bold mb-sm text-white">{item.title}</h3>
+                <p className="text-grey-light text-sm sm:text-base leading-relaxed">{item.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FINAL CTA - DARK */}
-      <section className="py-3xl bg-brand-midnight text-white">
-        <div className="max-w-container mx-auto px-md text-center">
-          <h2 className="text-5xl md:text-6xl font-bold mb-lg">
-            A Cleaner Property Starts Here
+      {/* FINAL CTA - PREMIUM DARK SECTION */}
+      <section className="relative py-4xl sm:py-5xl bg-brand-navy text-white overflow-hidden">
+        {/* Subtle background texture */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-gold via-transparent to-transparent"></div>
+        </div>
+
+        <motion.div
+          className="relative z-10 max-w-4xl mx-auto px-md sm:px-lg text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-lg leading-tight">
+            A Cleaner Property
+            <br />
+            <span className="text-brand-gold">Starts Here</span>
           </h2>
-          <p className="text-xl mb-2xl max-w-2xl mx-auto text-grey-light">
+          <p className="text-base sm:text-lg md:text-xl mb-3xl max-w-3xl mx-auto text-grey-light leading-relaxed">
             Tell us what you need and our team will review your requirements and get back to you with a quotation.
           </p>
-          <div className="flex flex-col sm:flex-row gap-md justify-center">
-            <a href="/contact?enquiry=estimate">
+
+          {/* CTA buttons */}
+          <motion.div
+            className="flex flex-col xs:flex-row gap-md sm:gap-lg justify-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <a href="/contact?enquiry=estimate" className="inline-block">
               <Button variant="primary" size="lg">
                 Get a Cleaning Estimate
               </Button>
             </a>
-            <a href="tel:07886091926">
+            <a href="tel:07886091926" className="inline-block">
               <Button variant="ghost" size="lg">
                 Call 07886 091926
               </Button>
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* FOOTER - PREMIUM REDESIGNED */}
