@@ -127,7 +127,7 @@ export async function POST(
 
     // Send via Resend
     const sendResult = await resend.emails.send({
-      from: 'quotes@neatedgecleaning.co.uk',
+      from: 'quotes@neatedgecleaning.com',
       to: email || lead.email,
       subject: `Quotation ${quote.quote_number} - Neatedge Cleaning`,
       html: htmlContent,

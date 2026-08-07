@@ -91,10 +91,10 @@ export const Footer: React.FC = () => {
               <p>
                 Email:{' '}
                 <a
-                  href="mailto:info@neatedgecleaning.co.uk"
+                  href="mailto:info@neatedgecleaning.com"
                   className="text-brand-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
                 >
-                  info@neatedgecleaning.co.uk
+                  info@neatedgecleaning.com
                 </a>
               </p>
               <p>
