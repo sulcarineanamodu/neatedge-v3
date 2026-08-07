@@ -5,6 +5,7 @@ import StatusBadge from './StatusBadge';
 import LeadStatusControl from './LeadStatusControl';
 import FollowUpModal from './FollowUpModal';
 import ContactHistory from './ContactHistory';
+import GenerateQuoteModal from './GenerateQuoteModal';
 
 interface LeadDetailContentProps {
   lead: any;
@@ -35,6 +36,7 @@ function formatEnquiryType(type: string): string {
 
 export default function LeadDetailContent({ lead, activity }: LeadDetailContentProps) {
   const [showFollowUpModal, setShowFollowUpModal] = useState(false);
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
   const isOverdue = lead.follow_up_at && new Date(lead.follow_up_at) < new Date();
@@ -213,6 +215,19 @@ export default function LeadDetailContent({ lead, activity }: LeadDetailContentP
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-navy">Quotation</h2>
+          <button
+            type="button"
+            onClick={() => setShowQuoteModal(true)}
+            className="shrink-0 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+          >
+            Generate Quote
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between gap-4 mb-4">
           <h2 className="text-lg font-semibold text-navy">Follow-up Schedule</h2>
           <button
@@ -297,6 +312,16 @@ export default function LeadDetailContent({ lead, activity }: LeadDetailContentP
         isOpen={showFollowUpModal}
         onClose={() => setShowFollowUpModal(false)}
         onSuccess={handleFollowUpSuccess}
+      />
+
+      <GenerateQuoteModal
+        leadId={lead.id}
+        leadName={lead.name}
+        isOpen={showQuoteModal}
+        onClose={() => setShowQuoteModal(false)}
+        onSuccess={() => {
+          setRefreshKey(prev => prev + 1);
+        }}
       />
     </div>
   );
