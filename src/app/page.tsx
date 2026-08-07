@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/Button';
@@ -14,9 +13,8 @@ import Button from '@/components/Button';
  * Key fixes:
  * - Hero H1 uses clamp() for responsive sizing (64px–72px desktop)
  * - No text clipping with proper max-widths and padding
- * - Framer Motion animations for premium feel
- * - Fixed image layouts and fallbacks
- * - Premium motion on scroll and hover
+ * - CSS animations for premium feel
+ * - Fixed image layouts
  * - Responsive at all breakpoints (375px–1920px)
  */
 export default function Home() {
@@ -61,7 +59,7 @@ export default function Home() {
 
           {/* CTA */}
           <div className="flex items-center gap-md">
-            <a href="tel:07886091926" className={`font-medium transition-colors ${
+            <a href="tel:07886091926" className={`font-medium transition-colors text-sm sm:text-base ${
               scrolled ? 'text-brand-navy hover:text-brand-gold' : 'text-white hover:text-brand-gold'
             }`}>
               📞 07886 091926
@@ -92,65 +90,37 @@ export default function Home() {
         </div>
 
         {/* Hero content — constrained width, proper padding */}
-        <motion.div
-          className="relative z-10 w-full px-md sm:px-lg md:px-xl"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
+        <div className="relative z-10 w-full px-md sm:px-lg md:px-xl">
           <div className="max-w-5xl mx-auto">
             {/* Subheading */}
-            <motion.div
-              className="mb-lg sm:mb-xl text-brand-gold font-semibold uppercase tracking-widest text-xs sm:text-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
+            <div className="mb-lg sm:mb-xl text-brand-gold font-semibold uppercase tracking-widest text-xs sm:text-sm">
               Professional Cleaning • West London
-            </motion.div>
+            </div>
 
-            {/* Main headline — clamp() for responsive sizing */}
-            <motion.h1
+            {/* Main headline — clamp() for responsive sizing (NO CLIPPING) */}
+            <h1
               className="font-bold mb-lg sm:mb-xl leading-tight text-white"
               style={{
-                fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', // 40px–72px responsive
+                fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', // 40px–72px responsive, never clips
               }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
             >
               Professional Cleaning,
               <br />
               <span className="text-brand-gold">Delivered Properly</span>
-            </motion.h1>
+            </h1>
 
             {/* Supporting copy */}
-            <motion.p
-              className="text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
+            <p className="text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed">
               Professional residential, commercial and property cleaning for homes, businesses, landlords and property professionals across West London.
-            </motion.p>
+            </p>
 
             {/* Service areas */}
-            <motion.p
-              className="text-sm sm:text-base mb-xl sm:mb-2xl text-brand-gold font-medium"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
+            <p className="text-sm sm:text-base mb-xl sm:mb-2xl text-brand-gold font-medium">
               Serving Uxbridge • West Drayton • Hayes • Hillingdon • Heathrow Corridor
-            </motion.p>
+            </p>
 
             {/* CTA buttons */}
-            <motion.div
-              className="flex flex-col xs:flex-row gap-md sm:gap-lg"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
+            <div className="flex flex-col xs:flex-row gap-md sm:gap-lg">
               <a href="/contact?enquiry=estimate" className="inline-block">
                 <Button variant="primary" size="lg">
                   Get a Cleaning Estimate
@@ -161,23 +131,19 @@ export default function Home() {
                   Book a Site Survey
                 </Button>
               </a>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 text-white"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 text-white animate-bounce">
           <div className="text-center">
             <p className="text-xs sm:text-sm mb-2 opacity-80">Scroll to explore</p>
             <svg className="w-5 h-5 sm:w-6 sm:h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* TRUST BAR - PREMIUM */}
@@ -211,27 +177,14 @@ export default function Home() {
       {/* SERVICES GRID - PREMIUM REDESIGNED */}
       <section className="py-3xl sm:py-4xl">
         <div className="max-w-container mx-auto px-md sm:px-lg">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-brand-navy text-center">
-              Our Services
-            </h2>
-          </motion.div>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-brand-navy text-center">
+            Our Services
+          </h2>
 
           {/* 2x2 service grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-lg md:gap-2xl">
             {/* Card 1: Commercial */}
-            <motion.div
-              className="group cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
+            <div className="group cursor-pointer">
               <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
                 <Image
                   src="/image-office.png"
@@ -252,16 +205,10 @@ export default function Home() {
                   Explore Commercial →
                 </Button>
               </Link>
-            </motion.div>
+            </div>
 
             {/* Card 2: Residential */}
-            <motion.div
-              className="group cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
+            <div className="group cursor-pointer">
               <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
                 <Image
                   src="/image-retail.png"
@@ -282,16 +229,10 @@ export default function Home() {
                   Explore Residential →
                 </Button>
               </Link>
-            </motion.div>
+            </div>
 
             {/* Card 3: End of Tenancy */}
-            <motion.div
-              className="group cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
+            <div className="group cursor-pointer">
               <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
                 <Image
                   src="/image-supplies.png"
@@ -307,16 +248,10 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Card 4: Property Professional */}
-            <motion.div
-              className="group cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
+            <div className="group cursor-pointer">
               <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
                 <Image
                   src="/image-about.png"
@@ -337,7 +272,7 @@ export default function Home() {
                   Learn More →
                 </Button>
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -347,18 +282,13 @@ export default function Home() {
         <div className="max-w-container mx-auto px-md sm:px-lg">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3xl lg:gap-4xl">
             {/* Residential */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
+            <div>
               <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden mb-lg sm:mb-xl shadow-2xl">
                 <Image
                   src="/image-hero.png"
                   alt="Professional residential cleaning team"
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="object-cover hover:scale-110 transition-transform duration-700"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
@@ -371,21 +301,16 @@ export default function Home() {
                   Explore Residential Services
                 </Button>
               </Link>
-            </motion.div>
+            </div>
 
             {/* Commercial */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
+            <div>
               <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden mb-lg sm:mb-xl shadow-2xl">
                 <Image
                   src="/image-office.png"
                   alt="Professional commercial office cleaning"
                   fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="object-cover hover:scale-110 transition-transform duration-700"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
@@ -398,7 +323,7 @@ export default function Home() {
                   Explore Commercial Services
                 </Button>
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -408,12 +333,7 @@ export default function Home() {
         <div className="max-w-container mx-auto px-md sm:px-lg">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3xl lg:gap-4xl items-center">
             {/* Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
+            <div>
               <div className="text-brand-gold text-xs sm:text-sm font-semibold mb-md uppercase tracking-widest">
                 For Property Professionals
               </div>
@@ -426,19 +346,18 @@ export default function Home() {
 
               {/* Benefits list */}
               <div className="space-y-md mb-2xl sm:mb-3xl">
-                {['Property turnovers and end-of-tenancy cleaning', 'Airbnb and serviced accommodation support', 'Consolidated communication and flexible scheduling'].map((benefit, idx) => (
-                  <motion.p
-                    key={idx}
-                    className="flex gap-md items-start"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    <span className="text-brand-gold text-xl mt-0.5 flex-shrink-0">✓</span>
-                    <span className="text-base text-grey-light">{benefit}</span>
-                  </motion.p>
-                ))}
+                <p className="flex gap-md items-start">
+                  <span className="text-brand-gold text-xl mt-0.5 flex-shrink-0">✓</span>
+                  <span className="text-base text-grey-light">Property turnovers and end-of-tenancy cleaning</span>
+                </p>
+                <p className="flex gap-md items-start">
+                  <span className="text-brand-gold text-xl mt-0.5 flex-shrink-0">✓</span>
+                  <span className="text-base text-grey-light">Airbnb and serviced accommodation support</span>
+                </p>
+                <p className="flex gap-md items-start">
+                  <span className="text-brand-gold text-xl mt-0.5 flex-shrink-0">✓</span>
+                  <span className="text-base text-grey-light">Consolidated communication and flexible scheduling</span>
+                </p>
               </div>
 
               {/* CTA buttons */}
@@ -454,16 +373,10 @@ export default function Home() {
                   </Button>
                 </Link>
               </div>
-            </motion.div>
+            </div>
 
             {/* Image */}
-            <motion.div
-              className="relative h-80 sm:h-96 rounded-2xl overflow-hidden shadow-2xl"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
+            <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden shadow-2xl">
               <Image
                 src="/image-about.png"
                 alt="Property professional partnership — modern property"
@@ -471,7 +384,7 @@ export default function Home() {
                 className="object-cover hover:scale-105 transition-transform duration-700"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -479,16 +392,9 @@ export default function Home() {
       {/* HOW IT WORKS - PREMIUM TIMELINE */}
       <section className="py-3xl sm:py-4xl bg-gradient-to-b from-grey-light to-white">
         <div className="max-w-container mx-auto px-md sm:px-lg">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-brand-navy text-center">
-              How It Works
-            </h2>
-          </motion.div>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-brand-navy text-center">
+            How It Works
+          </h2>
 
           {/* Timeline grid */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-md md:gap-lg">
@@ -498,14 +404,7 @@ export default function Home() {
               { step: '03', title: 'Confirm the Service', desc: 'Review and schedule your preferred cleaning date' },
               { step: '04', title: 'We Complete the Job', desc: 'Professional cleaning with full communication' },
             ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                className="relative text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                viewport={{ once: true }}
-              >
+              <div key={idx} className="relative text-center">
                 {/* Timeline connector line (desktop only) */}
                 {idx < 3 && (
                   <div className="hidden md:block absolute top-12 left-[60%] w-[40%] h-0.5 bg-gradient-to-r from-brand-gold/60 to-brand-gold/20"></div>
@@ -519,7 +418,7 @@ export default function Home() {
                 {/* Content */}
                 <h3 className="text-lg sm:text-xl font-bold text-brand-navy mb-md">{item.title}</h3>
                 <p className="text-sm text-grey-600 leading-relaxed">{item.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -528,16 +427,9 @@ export default function Home() {
       {/* WHY CHOOSE NEATEDGE - PREMIUM DARK SECTION */}
       <section className="py-3xl sm:py-4xl bg-brand-navy text-white">
         <div className="max-w-container mx-auto px-md sm:px-lg">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-center">
-              Why Choose Neatedge?
-            </h2>
-          </motion.div>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-center">
+            Why Choose Neatedge?
+          </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg md:gap-2xl">
             {[
@@ -548,17 +440,10 @@ export default function Home() {
               { title: 'Insurance & Security', desc: '£5M public liability insurance and professional credentials' },
               { title: 'Founder-Led', desc: 'Personal accountability and direct oversight of quality' },
             ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                className="border-l-4 border-brand-gold pl-lg sm:pl-2xl py-md"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                viewport={{ once: true }}
-              >
+              <div key={idx} className="border-l-4 border-brand-gold pl-lg sm:pl-2xl py-md">
                 <h3 className="text-lg sm:text-xl font-bold mb-sm text-white">{item.title}</h3>
                 <p className="text-grey-light text-sm sm:text-base leading-relaxed">{item.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -571,13 +456,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-br from-brand-gold via-transparent to-transparent"></div>
         </div>
 
-        <motion.div
-          className="relative z-10 max-w-4xl mx-auto px-md sm:px-lg text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
+        <div className="relative z-10 max-w-4xl mx-auto px-md sm:px-lg text-center">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-lg leading-tight">
             A Cleaner Property
             <br />
@@ -588,13 +467,7 @@ export default function Home() {
           </p>
 
           {/* CTA buttons */}
-          <motion.div
-            className="flex flex-col xs:flex-row gap-md sm:gap-lg justify-center"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            viewport={{ once: true }}
-          >
+          <div className="flex flex-col xs:flex-row gap-md sm:gap-lg justify-center">
             <a href="/contact?enquiry=estimate" className="inline-block">
               <Button variant="primary" size="lg">
                 Get a Cleaning Estimate
@@ -605,11 +478,11 @@ export default function Home() {
                 Call 07886 091926
               </Button>
             </a>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </section>
 
-      {/* FOOTER - PREMIUM REDESIGNED */}
+      {/* FOOTER - PREMIUM */}
       <footer className="bg-brand-navy text-white">
         <div className="max-w-container mx-auto px-md py-3xl">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg mb-3xl pb-3xl border-b border-brand-midnight">
