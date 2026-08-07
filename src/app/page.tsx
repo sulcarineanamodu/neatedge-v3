@@ -98,10 +98,10 @@ export default function Home() {
           </nav>
 
           {/* CTA Group */}
-          <div className="flex items-center gap-lg">
+          <div className="flex items-center gap-sm sm:gap-lg">
             <a
               href="tel:07886091926"
-              className={`text-sm font-medium transition-colors duration-200 ${
+              className={`hidden sm:inline text-sm font-medium transition-colors duration-200 ${
                 scrolled ? 'text-brand-navy hover:text-brand-gold' : 'text-white hover:text-brand-gold'
               }`}
             >
@@ -121,7 +121,7 @@ export default function Home() {
         {/* Background image with overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/image-hero.png"
+            src="/images/neatedge/hero.jpg"
             alt="Professional cleaning service in West London"
             fill
             className="object-cover"
@@ -292,7 +292,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-64 sm:h-80 md:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-lg">
                   <Image
-                    src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1000&q=85&auto=format&fit=crop"
+                    src="/images/neatedge/end-of-tenancy.jpg"
                     alt="End of Tenancy Cleaning - Bright modern apartment"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -325,7 +325,7 @@ export default function Home() {
               <div className="group cursor-pointer h-full">
                 <div className="relative h-64 sm:h-96 md:h-full rounded-2xl overflow-hidden shadow-lg mb-lg">
                   <Image
-                    src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=700&q=85&auto=format&fit=crop"
+                    src="/images/neatedge/deep-cleaning.jpg"
                     alt="Deep Cleaning - Professional cleaning work"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -358,7 +358,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
                   <Image
-                    src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&q=85&auto=format&fit=crop"
+                    src="/images/neatedge/commercial.jpg"
                     alt="Office Cleaning"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -385,7 +385,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
                   <Image
-                    src="https://images.unsplash.com/photo-1625246333195-78d9c38ad576?w=400&q=85&auto=format&fit=crop"
+                    src="/images/neatedge/carpet-cleaning.jpg"
                     alt="Carpet Cleaning"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -412,7 +412,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
                   <Image
-                    src="https://images.unsplash.com/photo-1576091160550-112173fba483?w=400&q=85&auto=format&fit=crop"
+                    src="/images/neatedge/commercial.jpg"
                     alt="Commercial Cleaning"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -445,7 +445,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-2xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=85&auto=format&fit=crop"
+                  src="/images/neatedge/end-of-tenancy.jpg"
                   alt="Beautiful residential home interior"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -475,7 +475,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-2xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=700&q=85&auto=format&fit=crop"
+                  src="/images/neatedge/commercial.jpg"
                   alt="Professional commercial office space"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -512,7 +512,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=85&auto=format&fit=crop"
+                  src="/images/neatedge/team-working.jpg"
                   alt="Modern apartment property turnaround"
                   fill
                   className="object-cover"
@@ -643,7 +643,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[450px] rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src="https://images.unsplash.com/photo-1563207153-f403bf289096?w=700&q=85&auto=format&fit=crop"
+                  src="/images/neatedge/property-professionals.jpg"
                   alt="Professional cleaner ensuring high standards"
                   fill
                   className="object-cover"
@@ -684,7 +684,7 @@ export default function Home() {
         {/* Full-width background image with overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1576091160550-112173fba483?w=1920&q=85&auto=format&fit=crop"
+            src="/images/neatedge/commercial.jpg"
             alt="Premium modern property interior"
             fill
             className="object-cover"
