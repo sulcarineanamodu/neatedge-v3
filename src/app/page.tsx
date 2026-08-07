@@ -161,7 +161,7 @@ export default function Home() {
 
             {/* Subheading copy */}
             <motion.p
-              className="font-josefin text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed"
+              className="font-manrope text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed"
               variants={itemVariants}
             >
               Professional residential, commercial and property cleaning for homes, businesses, landlords and property professionals across West London.
@@ -274,7 +274,7 @@ export default function Home() {
             <h2 className="font-cinzel text-4xl sm:text-5xl md:text-6xl font-bold mb-md text-brand-navy">
               Our Services
             </h2>
-            <p className="font-josefin text-grey-600 max-w-3xl text-base sm:text-lg mb-3xl leading-relaxed">
+            <p className="font-manrope text-grey-600 max-w-3xl text-base sm:text-lg mb-3xl leading-relaxed">
               Professional cleaning for every situation. From end-of-tenancy turnarounds to ongoing commercial maintenance, we deliver consistent quality across residential, commercial, and property professional sectors.
             </p>
           </motion.div>
@@ -302,7 +302,7 @@ export default function Home() {
                     <div className="text-white w-full text-right">
                       <div className="text-brand-gold text-xs sm:text-sm font-semibold uppercase tracking-wider mb-sm">Premium Service</div>
                       <h3 className="font-cinzel text-2xl sm:text-4xl font-bold mb-md leading-tight">End-of-Tenancy Cleaning</h3>
-                      <p className="font-josefin text-sm sm:text-base text-grey-light max-w-md ml-auto">Professional property turnover cleaning with meticulous attention to detail</p>
+                      <p className="font-manrope text-sm sm:text-base text-grey-light max-w-md ml-auto">Professional property turnover cleaning with meticulous attention to detail</p>
                     </div>
                   </div>
                 </div>
@@ -335,7 +335,7 @@ export default function Home() {
                     <div className="text-white w-full">
                       <div className="text-brand-gold text-xs sm:text-sm font-semibold uppercase tracking-wider mb-sm">Thorough</div>
                       <h3 className="font-cinzel text-xl sm:text-2xl font-bold mb-md">Deep Cleaning</h3>
-                      <p className="font-josefin text-xs sm:text-sm text-grey-light">Comprehensive cleaning for homes and properties requiring intensive attention</p>
+                      <p className="font-manrope text-xs sm:text-sm text-grey-light">Comprehensive cleaning for homes and properties requiring intensive attention</p>
                     </div>
                   </div>
                 </div>
@@ -367,7 +367,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 to-transparent flex items-end p-lg">
                     <div className="text-white">
                       <h3 className="font-cinzel text-lg font-bold">Office Cleaning</h3>
-                      <p className="font-josefin text-xs text-grey-light">Professional workspaces</p>
+                      <p className="font-manrope text-xs text-grey-light">Professional workspaces</p>
                     </div>
                   </div>
                 </div>
@@ -394,7 +394,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 to-transparent flex items-end p-lg">
                     <div className="text-white">
                       <h3 className="font-cinzel text-lg font-bold">Carpet Cleaning</h3>
-                      <p className="font-josefin text-xs text-grey-light">Specialised care</p>
+                      <p className="font-manrope text-xs text-grey-light">Specialised care</p>
                     </div>
                   </div>
                 </div>
@@ -421,7 +421,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 to-transparent flex items-end p-lg">
                     <div className="text-white">
                       <h3 className="font-cinzel text-lg font-bold">Commercial</h3>
-                      <p className="font-josefin text-xs text-grey-light">Business solutions</p>
+                      <p className="font-manrope text-xs text-grey-light">Business solutions</p>
                     </div>
                   </div>
                 </div>
@@ -454,7 +454,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-brand-navy/20 to-transparent flex items-end p-2xl">
                   <div className="text-white">
                     <h3 className="font-cinzel text-3xl sm:text-4xl font-bold mb-md">Residential Cleaning</h3>
-                    <p className="font-josefin text-base text-grey-light max-w-md leading-relaxed">Professional domestic cleaning for homes across West London, from routine maintenance to complete deep cleans.</p>
+                    <p className="font-manrope text-base text-grey-light max-w-md leading-relaxed">Professional domestic cleaning for homes across West London, from routine maintenance to complete deep cleans.</p>
                   </div>
                 </div>
               </div>
@@ -484,7 +484,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-brand-navy/20 to-transparent flex items-end p-2xl">
                   <div className="text-white">
                     <h3 className="font-cinzel text-3xl sm:text-4xl font-bold mb-md">Commercial Cleaning</h3>
-                    <p className="font-josefin text-base text-grey-light max-w-md leading-relaxed">Tailored solutions for offices, retail spaces, and commercial properties requiring professional standards.</p>
+                    <p className="font-manrope text-base text-grey-light max-w-md leading-relaxed">Tailored solutions for offices, retail spaces, and commercial properties requiring professional standards.</p>
                   </div>
                 </div>
               </div>
@@ -534,7 +534,7 @@ export default function Home() {
               <h2 className="font-cinzel text-3xl sm:text-4xl md:text-5xl font-bold mb-lg text-brand-navy leading-tight">
                 Cleaning Support Built Around Property Turnarounds
               </h2>
-              <p className="font-josefin text-base sm:text-lg text-grey-600 mb-lg leading-relaxed">
+              <p className="font-manrope text-base sm:text-lg text-grey-600 mb-lg leading-relaxed">
                 Estate agents, letting agents, landlords, and property managers rely on Neatedge for reliable, professional cleaning that keeps properties in pristine condition. We understand the turnaround timelines and deliver consistent results.
               </p>
               <ul className="space-y-md mb-3xl">
@@ -550,7 +550,7 @@ export default function Home() {
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="font-josefin text-base text-grey-700">{item}</span>
+                    <span className="font-manrope text-base text-grey-700">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -606,7 +606,7 @@ export default function Home() {
 
                 {/* Step content */}
                 <h3 className="font-cinzel text-lg sm:text-xl font-bold text-brand-navy mb-md">{item.title}</h3>
-                <p className="font-josefin text-sm text-grey-600 leading-relaxed">{item.desc}</p>
+                <p className="font-manrope text-sm text-grey-600 leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -629,7 +629,7 @@ export default function Home() {
                 <br />
                 Personal Accountability.
               </h2>
-              <p className="font-josefin text-base sm:text-lg text-grey-600 mb-lg leading-relaxed">
+              <p className="font-manrope text-base sm:text-lg text-grey-600 mb-lg leading-relaxed">
                 Every cleaning is delivered with meticulous attention to detail and complete transparency. We stand behind our work.
               </p>
             </motion.div>
@@ -672,7 +672,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: idx * 0.08 }}
               >
                 <h3 className="font-cinzel text-lg font-bold text-brand-navy mb-sm">{item.title}</h3>
-                <p className="font-josefin text-sm text-grey-600">{item.desc}</p>
+                <p className="font-manrope text-sm text-grey-600">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -708,7 +708,7 @@ export default function Home() {
             <br />
             <span className="text-brand-gold">Starts Here</span>
           </h2>
-          <p className="font-josefin text-base sm:text-lg md:text-xl mb-3xl max-w-3xl mx-auto text-grey-light leading-relaxed">
+          <p className="font-manrope text-base sm:text-lg md:text-xl mb-3xl max-w-3xl mx-auto text-grey-light leading-relaxed">
             Tell us what you need and our team will review your requirements and get back to you with a clear quotation.
           </p>
 
@@ -742,8 +742,8 @@ export default function Home() {
             {/* Column 1: Branding */}
             <div>
               <h3 className="font-cinzel text-2xl font-bold mb-sm text-white">Neatedge</h3>
-              <p className="font-josefin text-xs sm:text-sm text-grey-light/90 font-medium uppercase tracking-wider mb-md">Professional Cleaning Across West London</p>
-              <p className="font-josefin text-sm text-grey-light leading-relaxed">
+              <p className="font-manrope text-xs sm:text-sm text-grey-light/90 font-medium uppercase tracking-wider mb-md">Professional Cleaning Across West London</p>
+              <p className="font-manrope text-sm text-grey-light leading-relaxed">
                 Trusted by residential, commercial clients and property professionals across West London. Professional standards, personal accountability.
               </p>
             </div>
@@ -751,7 +751,7 @@ export default function Home() {
             {/* Column 2: Services */}
             <div>
               <h4 className="font-cinzel font-bold text-brand-gold mb-lg uppercase text-xs tracking-wider">Services</h4>
-              <ul className="space-y-sm text-sm font-josefin">
+              <ul className="space-y-sm text-sm font-manrope">
                 <li><Link href="/residential" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Residential Cleaning</Link></li>
                 <li><Link href="/commercial" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Commercial Cleaning</Link></li>
                 <li><Link href="/" className="text-grey-light hover:text-brand-gold transition-colors duration-200">End of Tenancy</Link></li>
@@ -764,7 +764,7 @@ export default function Home() {
             {/* Column 3: Company */}
             <div>
               <h4 className="font-cinzel font-bold text-brand-gold mb-lg uppercase text-xs tracking-wider">Company</h4>
-              <ul className="space-y-sm text-sm font-josefin">
+              <ul className="space-y-sm text-sm font-manrope">
                 <li><Link href="/about" className="text-grey-light hover:text-brand-gold transition-colors duration-200">About Us</Link></li>
                 <li><Link href="/areas" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Service Areas</Link></li>
                 <li><Link href="/property-professionals" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Property Professionals</Link></li>
@@ -775,7 +775,7 @@ export default function Home() {
             {/* Column 4: Get In Touch */}
             <div>
               <h4 className="font-cinzel font-bold text-brand-gold mb-lg uppercase text-xs tracking-wider">Get In Touch</h4>
-              <div className="space-y-md font-josefin">
+              <div className="space-y-md font-manrope">
                 <div>
                   <p className="text-grey-light text-xs uppercase tracking-wide mb-xs">Email</p>
                   <a
@@ -803,7 +803,7 @@ export default function Home() {
           </div>
 
           {/* Bottom bar — Minimal but precise */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-md text-xs text-grey-light font-josefin">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-md text-xs text-grey-light font-manrope">
             <div className="flex flex-col sm:flex-row gap-sm sm:gap-md">
               <p>&copy; 2026 Neatedge Cleaning</p>
               <p className="hidden sm:block">•</p>
@@ -822,16 +822,16 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Global styles for Cinzel and Josefin Sans */}
+      {/* Global styles for Cinzel and Manrope */}
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap');
 
         .font-cinzel {
           font-family: 'Cinzel', serif;
         }
 
-        .font-josefin {
-          font-family: 'Josefin Sans', sans-serif;
+        .font-manrope {
+          font-family: 'Manrope', sans-serif;
         }
 
         @media (prefers-reduced-motion: reduce) {
