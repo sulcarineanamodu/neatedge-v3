@@ -95,30 +95,30 @@ alter table public.lead_activity enable row level security;
 alter table public.audit_log enable row level security;
 
 -- Admin Profiles: Only authenticated users can read, admins can update
-create policy "admin_profiles_read" on public.admin_profiles
+create policy if not exists "admin_profiles_read" on public.admin_profiles
   for select
   using (auth.role() = 'authenticated');
 
-create policy "admin_profiles_update_self" on public.admin_profiles
+create policy if not exists "admin_profiles_update_self" on public.admin_profiles
   for update
   using (public.is_admin(auth.uid()))
   with check (public.is_admin(auth.uid()));
 
 -- Lead Activity: Only admins can read and insert
-create policy "lead_activity_admin_read" on public.lead_activity
+create policy if not exists "lead_activity_admin_read" on public.lead_activity
   for select
   using (public.is_admin(auth.uid()));
 
-create policy "lead_activity_admin_insert" on public.lead_activity
+create policy if not exists "lead_activity_admin_insert" on public.lead_activity
   for insert
   with check (public.is_admin(auth.uid()));
 
 -- Audit Log: Only admins can read and insert
-create policy "audit_log_admin_read" on public.audit_log
+create policy if not exists "audit_log_admin_read" on public.audit_log
   for select
   using (public.is_admin(auth.uid()));
 
-create policy "audit_log_admin_insert" on public.audit_log
+create policy if not exists "audit_log_admin_insert" on public.audit_log
   for insert
   with check (public.is_admin(auth.uid()));
 
@@ -128,11 +128,11 @@ create policy "audit_log_admin_insert" on public.audit_log
 -- Only admins can read and update
 alter table public.leads enable row level security;
 
-create policy "leads_admin_read" on public.leads
+create policy if not exists "leads_admin_read" on public.leads
   for select
   using (public.is_admin(auth.uid()));
 
-create policy "leads_admin_update" on public.leads
+create policy if not exists "leads_admin_update" on public.leads
   for update
   using (public.is_admin(auth.uid()))
   with check (public.is_admin(auth.uid()));
