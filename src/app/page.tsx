@@ -1,71 +1,114 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/Button';
 
 /**
- * Premium Homepage — Neatedge
- * Cinematic design, professional imagery, premium interactions
- * 70% cleaning company | 20% luxury property brand | 10% modern tech
+ * NEATEDGE CLEANING - PREMIUM HOMEPAGE (£50K REDESIGN)
  *
- * Key fixes:
- * - Hero H1 uses clamp() for responsive sizing (64px–72px desktop)
- * - No text clipping with proper max-widths and padding
- * - CSS animations for premium feel
- * - Fixed image layouts
- * - Responsive at all breakpoints (375px–1920px)
+ * Design System: Premium Trust & Authority
+ * Brand: Navy #001F3F + Gold #D4A574 + Off-white #F8F7F4
+ * Typography: Premium serif (headlines) / refined sans (body)
+ * Pattern: Image-Led Editorial Design
+ *
+ * Art Direction:
+ * - Professional photography from premium sources
+ * - Editorial layout with asymmetry and intentional whitespace
+ * - Premium motion (subtle, sophisticated)
+ * - Gradient overlays for readability
+ * - Premium footer with proper hierarchy
+ * - Accessibility-first (WCAG AAA)
+ * - Responsive across 375px - 1920px
  */
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.15 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } }
+};
+
+const pulseVariants = {
+  pulse: {
+    scale: [1, 1.05, 1],
+    transition: { duration: 2, repeat: Infinity }
+  }
+};
+
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
+
+    // Check for prefers-reduced-motion
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <>
-      {/* PREMIUM STICKY HEADER */}
+      {/* PREMIUM STICKY HEADER — Trust & Authority Pattern */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-white shadow-lg'
-            : 'bg-transparent'
+            ? 'bg-white shadow-lg backdrop-blur-md'
+            : 'bg-gradient-to-b from-brand-navy/40 to-transparent'
         }`}
       >
         <div className="max-w-container mx-auto px-md h-20 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="font-bold text-2xl">
+          <Link href="/" className="font-bold text-2xl font-cinzel">
             <span className={scrolled ? 'text-brand-navy' : 'text-white'}>Neatedge</span>
           </Link>
 
-          {/* Nav */}
+          {/* Navigation */}
           <nav className="hidden md:flex items-center gap-2xl">
-            {['Residential', 'Commercial', 'Property Professionals', 'Areas', 'About'].map((item) => (
+            {[
+              { name: 'Residential', href: '/residential' },
+              { name: 'Commercial', href: '/commercial' },
+              { name: 'Property Professionals', href: '/property-professionals' },
+              { name: 'Services', href: '/services' },
+              { name: 'Areas', href: '/areas' },
+              { name: 'About', href: '/about' }
+            ].map((item) => (
               <Link
-                key={item}
-                href={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
-                className={`text-body font-medium transition-colors hover:text-brand-gold ${
+                key={item.name}
+                href={item.href}
+                className={`text-sm font-medium transition-colors duration-200 hover:text-brand-gold ${
                   scrolled ? 'text-brand-navy' : 'text-white'
                 }`}
               >
-                {item}
+                {item.name}
               </Link>
             ))}
           </nav>
 
-          {/* CTA */}
-          <div className="flex items-center gap-md">
-            <a href="tel:07886091926" className={`font-medium transition-colors text-sm sm:text-base ${
-              scrolled ? 'text-brand-navy hover:text-brand-gold' : 'text-white hover:text-brand-gold'
-            }`}>
+          {/* CTA Group */}
+          <div className="flex items-center gap-lg">
+            <a
+              href="tel:07886091926"
+              className={`text-sm font-medium transition-colors duration-200 ${
+                scrolled ? 'text-brand-navy hover:text-brand-gold' : 'text-white hover:text-brand-gold'
+              }`}
+            >
               📞 07886 091926
             </a>
             <a href="/contact?enquiry=estimate">
-              <Button variant={scrolled ? "primary" : "ghost"} size="sm">
+              <Button variant={scrolled ? 'primary' : 'ghost'} size="sm">
                 Get Estimate
               </Button>
             </a>
@@ -73,54 +116,70 @@ export default function Home() {
         </div>
       </header>
 
-      {/* CINEMATIC HERO — FIXED LAYOUT & RESPONSIVE TYPOGRAPHY */}
+      {/* PREMIUM HERO — Cinematic, Responsive, Professional */}
       <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-28">
-        {/* Background image + overlay */}
+        {/* Background image with overlay */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/image-hero.png"
-            alt="Professional cleaning team at work"
+            alt="Professional cleaning service in West London"
             fill
             className="object-cover"
             priority
             quality={85}
           />
-          {/* Premium gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/85 via-brand-navy/70 to-brand-navy/50"></div>
+          {/* Premium navy gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/85 via-brand-navy/70 to-brand-navy/40"></div>
         </div>
 
-        {/* Hero content — constrained width, proper padding */}
-        <div className="relative z-10 w-full px-md sm:px-lg md:px-xl">
-          <div className="max-w-5xl mx-auto">
+        {/* Hero content */}
+        <motion.div
+          className="relative z-10 w-full px-md sm:px-lg md:px-xl"
+          initial="hidden"
+          animate="visible"
+          variants={prefersReducedMotion ? { hidden: { opacity: 1 }, visible: { opacity: 1 } } : containerVariants}
+        >
+          <div className="max-w-4xl mx-auto">
             {/* Subheading */}
-            <div className="mb-lg sm:mb-xl text-brand-gold font-semibold uppercase tracking-widest text-xs sm:text-sm">
+            <motion.div
+              className="mb-lg sm:mb-xl text-brand-gold font-semibold uppercase tracking-widest text-xs sm:text-sm"
+              variants={itemVariants}
+            >
               Professional Cleaning • West London
-            </div>
+            </motion.div>
 
-            {/* Main headline — clamp() for responsive sizing (NO CLIPPING) */}
-            <h1
-              className="font-bold mb-lg sm:mb-xl leading-tight text-white"
-              style={{
-                fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', // 40px–72px responsive, never clips
-              }}
+            {/* Main headline — Premium Cinzel typography, responsive sizing */}
+            <motion.h1
+              className="font-cinzel font-bold mb-lg sm:mb-xl leading-tight text-white"
+              style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}
+              variants={itemVariants}
             >
               Professional Cleaning,
               <br />
               <span className="text-brand-gold">Delivered Properly</span>
-            </h1>
+            </motion.h1>
 
-            {/* Supporting copy */}
-            <p className="text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed">
+            {/* Subheading copy */}
+            <motion.p
+              className="font-josefin text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed"
+              variants={itemVariants}
+            >
               Professional residential, commercial and property cleaning for homes, businesses, landlords and property professionals across West London.
-            </p>
+            </motion.p>
 
             {/* Service areas */}
-            <p className="text-sm sm:text-base mb-xl sm:mb-2xl text-brand-gold font-medium">
+            <motion.p
+              className="text-sm sm:text-base mb-xl sm:mb-2xl text-brand-gold font-medium"
+              variants={itemVariants}
+            >
               Serving Uxbridge • West Drayton • Hayes • Hillingdon • Heathrow Corridor
-            </p>
+            </motion.p>
 
             {/* CTA buttons */}
-            <div className="flex flex-col xs:flex-row gap-md sm:gap-lg">
+            <motion.div
+              className="flex flex-col xs:flex-row gap-md sm:gap-lg"
+              variants={itemVariants}
+            >
               <a href="/contact?enquiry=estimate" className="inline-block">
                 <Button variant="primary" size="lg">
                   Get a Cleaning Estimate
@@ -131,343 +190,536 @@ export default function Home() {
                   Book a Site Survey
                 </Button>
               </a>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 text-white animate-bounce">
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 text-white"
+          animate={prefersReducedMotion ? {} : { y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
           <div className="text-center">
             <p className="text-xs sm:text-sm mb-2 opacity-80">Scroll to explore</p>
             <svg className="w-5 h-5 sm:w-6 sm:h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* TRUST BAR - PREMIUM */}
+      {/* CREDENTIALS BAR — Trust & Authority with Pulse Animations */}
       <section className="py-3xl bg-brand-navy text-white">
-        <div className="max-w-container mx-auto px-md">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-lg">
-            <div>
+        <div className="max-w-container mx-auto px-md sm:px-lg">
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-4 gap-lg md:gap-xl"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-100px' }}
+            variants={containerVariants}
+          >
+            {/* Insurance badge with pulse */}
+            <motion.div
+              className="text-center"
+              variants={itemVariants}
+              whileInView={!prefersReducedMotion ? { ...pulseVariants.pulse } : {}}
+            >
               <div className="text-brand-gold text-sm font-semibold mb-sm uppercase tracking-wider">Insurance</div>
-              <p className="text-3xl font-bold">£5M</p>
-              <p className="text-sm text-grey-light mt-sm">Public Liability Insured</p>
-            </div>
-            <div>
+              <p className="text-4xl md:text-5xl font-bold mb-md font-cinzel">£5M</p>
+              <p className="text-sm text-grey-light">Public Liability Insured</p>
+            </motion.div>
+
+            {/* Coverage with check mark */}
+            <motion.div className="text-center" variants={itemVariants}>
               <div className="text-brand-gold text-sm font-semibold mb-sm uppercase tracking-wider">Coverage</div>
-              <p className="text-3xl font-bold">✓</p>
-              <p className="text-sm text-grey-light mt-sm">Residential & Commercial</p>
-            </div>
-            <div>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-gold/10 mb-md">
+                <svg className="w-8 h-8 text-brand-gold" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <p className="text-sm text-grey-light">Residential & Commercial</p>
+            </motion.div>
+
+            {/* Location credential */}
+            <motion.div className="text-center" variants={itemVariants}>
               <div className="text-brand-gold text-sm font-semibold mb-sm uppercase tracking-wider">Location</div>
-              <p className="text-3xl font-bold">Local</p>
-              <p className="text-sm text-grey-light mt-sm">West London Specialists</p>
-            </div>
-            <div>
+              <p className="text-4xl md:text-5xl font-bold mb-md font-cinzel">Local</p>
+              <p className="text-sm text-grey-light">West London Specialists</p>
+            </motion.div>
+
+            {/* Leadership badge with check */}
+            <motion.div className="text-center" variants={itemVariants}>
               <div className="text-brand-gold text-sm font-semibold mb-sm uppercase tracking-wider">Leadership</div>
-              <p className="text-3xl font-bold">✓</p>
-              <p className="text-sm text-grey-light mt-sm">Founder-Led Service</p>
-            </div>
-          </div>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-gold/10 mb-md">
+                <svg className="w-8 h-8 text-brand-gold" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                </svg>
+              </div>
+              <p className="text-sm text-grey-light">Founder-Led Service</p>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* SERVICES GRID - PREMIUM REDESIGNED */}
-      <section className="py-3xl sm:py-4xl">
+      {/* PREMIUM SERVICES — EDITORIAL LAYOUT (NOT TEMPLATE CARDS) */}
+      <section className="py-4xl sm:py-5xl bg-white">
         <div className="max-w-container mx-auto px-md sm:px-lg">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-brand-navy text-center">
-            Our Services
-          </h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="font-cinzel text-4xl sm:text-5xl md:text-6xl font-bold mb-md text-brand-navy">
+              Our Services
+            </h2>
+            <p className="font-josefin text-grey-600 max-w-3xl text-base sm:text-lg mb-3xl leading-relaxed">
+              Professional cleaning for every situation. From end-of-tenancy turnarounds to ongoing commercial maintenance, we deliver consistent quality across residential, commercial, and property professional sectors.
+            </p>
+          </motion.div>
 
-          {/* 2x2 service grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-lg md:gap-2xl">
-            {/* Card 1: Commercial */}
-            <div className="group cursor-pointer">
-              <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
-                <Image
-                  src="/image-office.png"
-                  alt="Commercial cleaning"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/50 to-transparent flex items-end p-lg sm:p-2xl">
-                  <div className="text-white w-full">
-                    <h3 className="text-2xl sm:text-3xl font-bold mb-sm">Commercial Cleaning</h3>
-                    <p className="text-sm sm:text-base text-grey-light">Offices, retail, communal spaces</p>
+          {/* Editorial asymmetrical service layout */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-lg md:gap-2xl">
+            {/* Large feature: End-of-Tenancy (spans 7 cols on desktop) */}
+            <motion.div
+              className="md:col-span-7"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: 0 }}
+            >
+              <div className="group cursor-pointer">
+                <div className="relative h-64 sm:h-80 md:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-lg">
+                  <Image
+                    src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1000&q=85&auto=format&fit=crop"
+                    alt="End of Tenancy Cleaning - Bright modern apartment"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 58vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-brand-navy/30 to-transparent flex flex-col items-end justify-end p-lg sm:p-2xl">
+                    <div className="text-white w-full text-right">
+                      <div className="text-brand-gold text-xs sm:text-sm font-semibold uppercase tracking-wider mb-sm">Premium Service</div>
+                      <h3 className="font-cinzel text-2xl sm:text-4xl font-bold mb-md leading-tight">End-of-Tenancy Cleaning</h3>
+                      <p className="font-josefin text-sm sm:text-base text-grey-light max-w-md ml-auto">Professional property turnover cleaning with meticulous attention to detail</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <Link href="/commercial" className="inline-block w-full">
-                <Button variant="secondary" className="w-full">
-                  Explore Commercial →
-                </Button>
-              </Link>
-            </div>
-
-            {/* Card 2: Residential */}
-            <div className="group cursor-pointer">
-              <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
-                <Image
-                  src="/image-retail.png"
-                  alt="Residential cleaning"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/50 to-transparent flex items-end p-lg sm:p-2xl">
-                  <div className="text-white w-full">
-                    <h3 className="text-2xl sm:text-3xl font-bold mb-sm">Residential Cleaning</h3>
-                    <p className="text-sm sm:text-base text-grey-light">Domestic, deep cleans, end of tenancy</p>
-                  </div>
-                </div>
-              </div>
-              <Link href="/residential" className="inline-block w-full">
-                <Button variant="secondary" className="w-full">
-                  Explore Residential →
-                </Button>
-              </Link>
-            </div>
-
-            {/* Card 3: End of Tenancy */}
-            <div className="group cursor-pointer">
-              <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
-                <Image
-                  src="/image-supplies.png"
-                  alt="End of tenancy cleaning"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/50 to-transparent flex items-end p-lg sm:p-2xl">
-                  <div className="text-white w-full">
-                    <h3 className="text-2xl sm:text-3xl font-bold mb-sm">End of Tenancy</h3>
-                    <p className="text-sm sm:text-base text-grey-light">Professional property turnover cleaning</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 4: Property Professional */}
-            <div className="group cursor-pointer">
-              <div className="relative h-72 sm:h-80 rounded-2xl overflow-hidden shadow-2xl mb-md">
-                <Image
-                  src="/image-about.png"
-                  alt="Property professional support"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/50 to-transparent flex items-end p-lg sm:p-2xl">
-                  <div className="text-white w-full">
-                    <h3 className="text-2xl sm:text-3xl font-bold mb-sm">Property Professionals</h3>
-                    <p className="text-sm sm:text-base text-grey-light">Turnover & lettings support</p>
-                  </div>
-                </div>
-              </div>
-              <Link href="/property-professionals" className="inline-block w-full">
-                <Button variant="secondary" className="w-full">
-                  Learn More →
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* RESIDENTIAL / COMMERCIAL SPLIT — PREMIUM */}
-      <section className="py-3xl sm:py-4xl bg-white">
-        <div className="max-w-container mx-auto px-md sm:px-lg">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3xl lg:gap-4xl">
-            {/* Residential */}
-            <div>
-              <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden mb-lg sm:mb-xl shadow-2xl">
-                <Image
-                  src="/image-hero.png"
-                  alt="Professional residential cleaning team"
-                  fill
-                  className="object-cover hover:scale-110 transition-transform duration-700"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-md">Residential Cleaning</h3>
-              <p className="text-base text-grey-600 mb-lg sm:mb-xl leading-relaxed">
-                From regular domestic cleaning to deep cleans and end-of-tenancy work, we provide professional residential cleaning across West London.
-              </p>
-              <Link href="/residential" className="inline-block w-full">
-                <Button variant="primary" size="md" className="w-full">
-                  Explore Residential Services
-                </Button>
-              </Link>
-            </div>
-
-            {/* Commercial */}
-            <div>
-              <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden mb-lg sm:mb-xl shadow-2xl">
-                <Image
-                  src="/image-office.png"
-                  alt="Professional commercial office cleaning"
-                  fill
-                  className="object-cover hover:scale-110 transition-transform duration-700"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-md">Commercial Cleaning</h3>
-              <p className="text-base text-grey-600 mb-lg sm:mb-xl leading-relaxed">
-                Reliable cleaning support for offices, retail premises and commercial properties. Flexible schedules tailored to your business needs.
-              </p>
-              <Link href="/commercial" className="inline-block w-full">
-                <Button variant="primary" size="md" className="w-full">
-                  Explore Commercial Services
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* PROPERTY PROFESSIONALS FEATURE — REDESIGNED */}
-      <section className="py-3xl sm:py-4xl bg-brand-navy text-white">
-        <div className="max-w-container mx-auto px-md sm:px-lg">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3xl lg:gap-4xl items-center">
-            {/* Content */}
-            <div>
-              <div className="text-brand-gold text-xs sm:text-sm font-semibold mb-md uppercase tracking-widest">
-                For Property Professionals
-              </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-lg sm:mb-xl leading-tight">
-                Cleaning Support Built Around Property Turnarounds
-              </h2>
-              <p className="text-base sm:text-lg mb-lg sm:mb-xl text-grey-light leading-relaxed">
-                Estate agents, letting agents, landlords, property managers and serviced accommodation operators rely on Neatedge for responsive, professional cleaning support.
-              </p>
-
-              {/* Benefits list */}
-              <div className="space-y-md mb-2xl sm:mb-3xl">
-                <p className="flex gap-md items-start">
-                  <span className="text-brand-gold text-xl mt-0.5 flex-shrink-0">✓</span>
-                  <span className="text-base text-grey-light">Property turnovers and end-of-tenancy cleaning</span>
-                </p>
-                <p className="flex gap-md items-start">
-                  <span className="text-brand-gold text-xl mt-0.5 flex-shrink-0">✓</span>
-                  <span className="text-base text-grey-light">Airbnb and serviced accommodation support</span>
-                </p>
-                <p className="flex gap-md items-start">
-                  <span className="text-brand-gold text-xl mt-0.5 flex-shrink-0">✓</span>
-                  <span className="text-base text-grey-light">Consolidated communication and flexible scheduling</span>
-                </p>
-              </div>
-
-              {/* CTA buttons */}
-              <div className="flex flex-col xs:flex-row gap-md">
-                <Link href="/contact?enquiry=property-partnership">
-                  <Button variant="primary" size="md">
-                    Discuss a Partnership
+                <Link href="/" className="inline-block">
+                  <Button variant="secondary" className="group-hover:bg-brand-gold group-hover:text-brand-navy transition-colors">
+                    Explore Service →
                   </Button>
                 </Link>
-                <Link href="/property-professionals">
-                  <Button variant="ghost" size="md">
+              </div>
+            </motion.div>
+
+            {/* Tall feature: Deep Cleaning (spans 5 cols, 2 rows) */}
+            <motion.div
+              className="md:col-span-5 md:row-span-2"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div className="group cursor-pointer h-full">
+                <div className="relative h-64 sm:h-96 md:h-full rounded-2xl overflow-hidden shadow-lg mb-lg">
+                  <Image
+                    src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=700&q=85&auto=format&fit=crop"
+                    alt="Deep Cleaning - Professional cleaning work"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 42vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/40 to-transparent flex flex-col items-start justify-end p-lg sm:p-2xl">
+                    <div className="text-white w-full">
+                      <div className="text-brand-gold text-xs sm:text-sm font-semibold uppercase tracking-wider mb-sm">Thorough</div>
+                      <h3 className="font-cinzel text-xl sm:text-2xl font-bold mb-md">Deep Cleaning</h3>
+                      <p className="font-josefin text-xs sm:text-sm text-grey-light">Comprehensive cleaning for homes and properties requiring intensive attention</p>
+                    </div>
+                  </div>
+                </div>
+                <Link href="/" className="inline-block">
+                  <Button variant="secondary" size="sm" className="w-full">
                     Learn More →
                   </Button>
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Image */}
-            <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden shadow-2xl">
-              <Image
-                src="/image-about.png"
-                alt="Property professional partnership — modern property"
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
+            {/* Bottom left: Office Cleaning */}
+            <motion.div
+              className="md:col-span-3"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="group cursor-pointer">
+                <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
+                  <Image
+                    src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&q=85&auto=format&fit=crop"
+                    alt="Office Cleaning"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 to-transparent flex items-end p-lg">
+                    <div className="text-white">
+                      <h3 className="font-cinzel text-lg font-bold">Office Cleaning</h3>
+                      <p className="font-josefin text-xs text-grey-light">Professional workspaces</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Bottom middle: Carpet Cleaning */}
+            <motion.div
+              className="md:col-span-2"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+            >
+              <div className="group cursor-pointer">
+                <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
+                  <Image
+                    src="https://images.unsplash.com/photo-1625246333195-78d9c38ad576?w=400&q=85&auto=format&fit=crop"
+                    alt="Carpet Cleaning"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 50vw, 17vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 to-transparent flex items-end p-lg">
+                    <div className="text-white">
+                      <h3 className="font-cinzel text-lg font-bold">Carpet Cleaning</h3>
+                      <p className="font-josefin text-xs text-grey-light">Specialised care</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Bottom right: Commercial */}
+            <motion.div
+              className="md:col-span-2"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="group cursor-pointer">
+                <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
+                  <Image
+                    src="https://images.unsplash.com/photo-1576091160550-112173fba483?w=400&q=85&auto=format&fit=crop"
+                    alt="Commercial Cleaning"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 50vw, 17vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 to-transparent flex items-end p-lg">
+                    <div className="text-white">
+                      <h3 className="font-cinzel text-lg font-bold">Commercial</h3>
+                      <p className="font-josefin text-xs text-grey-light">Business solutions</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS - PREMIUM TIMELINE */}
-      <section className="py-3xl sm:py-4xl bg-gradient-to-b from-grey-light to-white">
+      {/* RESIDENTIAL + COMMERCIAL SPLIT — Premium Visual Divide */}
+      <section className="py-4xl sm:py-5xl bg-grey-light">
         <div className="max-w-container mx-auto px-md sm:px-lg">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-brand-navy text-center">
-            How It Works
-          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-lg md:gap-2xl">
+            {/* Residential */}
+            <motion.div
+              className="group"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: 0 }}
+            >
+              <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-2xl">
+                <Image
+                  src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=85&auto=format&fit=crop"
+                  alt="Beautiful residential home interior"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-brand-navy/20 to-transparent flex items-end p-2xl">
+                  <div className="text-white">
+                    <h3 className="font-cinzel text-3xl sm:text-4xl font-bold mb-md">Residential Cleaning</h3>
+                    <p className="font-josefin text-base text-grey-light max-w-md leading-relaxed">Professional domestic cleaning for homes across West London, from routine maintenance to complete deep cleans.</p>
+                  </div>
+                </div>
+              </div>
+              <Link href="/residential">
+                <Button variant="secondary" className="w-full">
+                  Residential Services →
+                </Button>
+              </Link>
+            </motion.div>
 
-          {/* Timeline grid */}
+            {/* Commercial */}
+            <motion.div
+              className="group"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-2xl">
+                <Image
+                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=700&q=85&auto=format&fit=crop"
+                  alt="Professional commercial office space"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-brand-navy/20 to-transparent flex items-end p-2xl">
+                  <div className="text-white">
+                    <h3 className="font-cinzel text-3xl sm:text-4xl font-bold mb-md">Commercial Cleaning</h3>
+                    <p className="font-josefin text-base text-grey-light max-w-md leading-relaxed">Tailored solutions for offices, retail spaces, and commercial properties requiring professional standards.</p>
+                  </div>
+                </div>
+              </div>
+              <Link href="/commercial">
+                <Button variant="secondary" className="w-full">
+                  Commercial Services →
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* PROPERTY PROFESSIONALS — Premium Sector Focus */}
+      <section className="py-4xl sm:py-5xl bg-white">
+        <div className="max-w-container mx-auto px-md sm:px-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2xl md:gap-3xl items-center">
+            {/* Image */}
+            <motion.div
+              className="order-2 md:order-1"
+              initial={{ opacity: 0, scale: 1.02 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.7 }}
+            >
+              <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg">
+                <Image
+                  src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=85&auto=format&fit=crop"
+                  alt="Modern apartment property turnaround"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/60 via-transparent to-transparent"></div>
+              </div>
+            </motion.div>
+
+            {/* Content */}
+            <motion.div
+              className="order-1 md:order-2"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div className="text-brand-gold text-sm font-semibold uppercase tracking-wider mb-md">For Property Professionals</div>
+              <h2 className="font-cinzel text-3xl sm:text-4xl md:text-5xl font-bold mb-lg text-brand-navy leading-tight">
+                Cleaning Support Built Around Property Turnarounds
+              </h2>
+              <p className="font-josefin text-base sm:text-lg text-grey-600 mb-lg leading-relaxed">
+                Estate agents, letting agents, landlords, and property managers rely on Neatedge for reliable, professional cleaning that keeps properties in pristine condition. We understand the turnaround timelines and deliver consistent results.
+              </p>
+              <ul className="space-y-md mb-3xl">
+                {[
+                  'Fast turnaround cleaning for tenancy changes',
+                  'Coordinated scheduling with property timelines',
+                  'Professional standards with full accountability',
+                  'Flexible services from small flats to large portfolios'
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-md">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-gold/20 flex items-center justify-center mt-0.5">
+                      <svg className="w-4 h-4 text-brand-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="font-josefin text-base text-grey-700">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/property-professionals">
+                <Button variant="primary" size="lg">
+                  Discuss a Partnership →
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS — Smooth Timeline Reveals */}
+      <section className="py-4xl sm:py-5xl bg-white">
+        <div className="max-w-container mx-auto px-md sm:px-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="font-cinzel text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-brand-navy text-center">
+              How It Works
+            </h2>
+          </motion.div>
+
+          {/* Timeline steps */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-md md:gap-lg">
             {[
               { step: '01', title: 'Tell Us What You Need', desc: 'Describe your property, cleaning type and requirements' },
               { step: '02', title: 'Receive Your Estimate', desc: 'We review and provide a clear, transparent quotation' },
               { step: '03', title: 'Confirm the Service', desc: 'Review and schedule your preferred cleaning date' },
-              { step: '04', title: 'We Complete the Job', desc: 'Professional cleaning with full communication' },
+              { step: '04', title: 'We Complete the Job', desc: 'Professional cleaning with full communication' }
             ].map((item, idx) => (
-              <div key={idx} className="relative text-center">
-                {/* Timeline connector line (desktop only) */}
+              <motion.div
+                key={idx}
+                className="relative text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+              >
+                {/* Connector line */}
                 {idx < 3 && (
                   <div className="hidden md:block absolute top-12 left-[60%] w-[40%] h-0.5 bg-gradient-to-r from-brand-gold/60 to-brand-gold/20"></div>
                 )}
 
-                {/* Step number circle */}
+                {/* Step circle */}
                 <div className="relative z-10 inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-brand-gold to-brand-gold/80 text-brand-navy font-bold mb-lg mx-auto">
-                  <span className="text-4xl font-bold">{item.step}</span>
+                  <span className="font-cinzel text-4xl font-bold">{item.step}</span>
                 </div>
 
-                {/* Content */}
-                <h3 className="text-lg sm:text-xl font-bold text-brand-navy mb-md">{item.title}</h3>
-                <p className="text-sm text-grey-600 leading-relaxed">{item.desc}</p>
-              </div>
+                {/* Step content */}
+                <h3 className="font-cinzel text-lg sm:text-xl font-bold text-brand-navy mb-md">{item.title}</h3>
+                <p className="font-josefin text-sm text-grey-600 leading-relaxed">{item.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* WHY CHOOSE NEATEDGE - PREMIUM DARK SECTION */}
-      <section className="py-3xl sm:py-4xl bg-brand-navy text-white">
+      {/* WHY NEATEDGE — Image-Led Premium Trust Section */}
+      <section className="py-4xl sm:py-5xl bg-white">
         <div className="max-w-container mx-auto px-md sm:px-lg">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3xl text-center">
-            Why Choose Neatedge?
-          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2xl md:gap-3xl items-center mb-4xl">
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="font-cinzel text-3xl sm:text-4xl md:text-5xl font-bold mb-lg text-brand-navy leading-tight">
+                Professional Standards.
+                <br />
+                Personal Accountability.
+              </h2>
+              <p className="font-josefin text-base sm:text-lg text-grey-600 mb-lg leading-relaxed">
+                Every cleaning is delivered with meticulous attention to detail and complete transparency. We stand behind our work.
+              </p>
+            </motion.div>
 
+            {/* Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 1.02 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+            >
+              <div className="relative h-96 sm:h-[450px] rounded-2xl overflow-hidden shadow-lg">
+                <Image
+                  src="https://images.unsplash.com/photo-1563207153-f403bf289096?w=700&q=85&auto=format&fit=crop"
+                  alt="Professional cleaner ensuring high standards"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Benefits grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg md:gap-2xl">
             {[
-              { title: 'Professional Standards', desc: 'Documented processes, consistent quality, full accountability' },
               { title: 'Clear Communication', desc: 'Transparent quotes, responsive updates, no hidden costs' },
-              { title: 'Dual Capability', desc: 'Proven experience across residential and commercial sectors' },
-              { title: 'West London Focus', desc: 'Deep local knowledge of the area and established relationships' },
-              { title: 'Insurance & Security', desc: '£5M public liability insurance and professional credentials' },
-              { title: 'Founder-Led', desc: 'Personal accountability and direct oversight of quality' },
+              { title: 'Professional Processes', desc: 'Documented procedures, consistent quality, full accountability' },
+              { title: 'Residential & Commercial', desc: 'Proven experience across residential and commercial sectors' },
+              { title: 'West London Specialists', desc: 'Deep local knowledge and established area relationships' },
+              { title: 'Fully Insured', desc: '£5M public liability insurance and professional credentials' },
+              { title: 'Founder-Led Accountability', desc: 'Personal oversight and direct quality assurance' }
             ].map((item, idx) => (
-              <div key={idx} className="border-l-4 border-brand-gold pl-lg sm:pl-2xl py-md">
-                <h3 className="text-lg sm:text-xl font-bold mb-sm text-white">{item.title}</h3>
-                <p className="text-grey-light text-sm sm:text-base leading-relaxed">{item.desc}</p>
-              </div>
+              <motion.div
+                key={idx}
+                className="bg-grey-light rounded-lg p-lg md:p-2xl border-l-4 border-brand-gold"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 0.6, delay: idx * 0.08 }}
+              >
+                <h3 className="font-cinzel text-lg font-bold text-brand-navy mb-sm">{item.title}</h3>
+                <p className="font-josefin text-sm text-grey-600">{item.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FINAL CTA - PREMIUM DARK SECTION */}
+      {/* FINAL CTA — Premium Image-Led Section with Distinct Identity */}
       <section className="relative py-4xl sm:py-5xl bg-brand-navy text-white overflow-hidden">
-        {/* Subtle background texture */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-gold via-transparent to-transparent"></div>
+        {/* Full-width background image with overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://images.unsplash.com/photo-1576091160550-112173fba483?w=1920&q=85&auto=format&fit=crop"
+            alt="Premium modern property interior"
+            fill
+            className="object-cover"
+            priority={false}
+            quality={85}
+          />
+          {/* Navy gradient overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/80 to-brand-navy/60"></div>
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-md sm:px-lg text-center">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-lg leading-tight">
+        {/* Content */}
+        <motion.div
+          className="relative z-10 max-w-4xl mx-auto px-md sm:px-lg text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="font-cinzel text-4xl sm:text-5xl md:text-6xl font-bold mb-lg leading-tight">
             A Cleaner Property
             <br />
             <span className="text-brand-gold">Starts Here</span>
           </h2>
-          <p className="text-base sm:text-lg md:text-xl mb-3xl max-w-3xl mx-auto text-grey-light leading-relaxed">
-            Tell us what you need and our team will review your requirements and get back to you with a quotation.
+          <p className="font-josefin text-base sm:text-lg md:text-xl mb-3xl max-w-3xl mx-auto text-grey-light leading-relaxed">
+            Tell us what you need and our team will review your requirements and get back to you with a clear quotation.
           </p>
 
-          {/* CTA buttons */}
-          <div className="flex flex-col xs:flex-row gap-md sm:gap-lg justify-center">
+          {/* CTA Buttons */}
+          <motion.div
+            className="flex flex-col xs:flex-row gap-md sm:gap-lg justify-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ delay: 0.2 }}
+          >
             <a href="/contact?enquiry=estimate" className="inline-block">
               <Button variant="primary" size="lg">
                 Get a Cleaning Estimate
@@ -478,73 +730,118 @@ export default function Home() {
                 Call 07886 091926
               </Button>
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* FOOTER - PREMIUM */}
+      {/* FOOTER — Premium 4-Column Layout with Proper Hierarchy */}
       <footer className="bg-brand-navy text-white">
-        <div className="max-w-container mx-auto px-md py-3xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg mb-3xl pb-3xl border-b border-brand-midnight">
-            {/* Column 1: Brand */}
+        <div className="max-w-container mx-auto px-md sm:px-lg py-4xl">
+          {/* Main Footer Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2xl mb-4xl pb-4xl border-b border-brand-midnight/50">
+            {/* Column 1: Branding */}
             <div>
-              <h3 className="text-2xl font-bold mb-md text-brand-gold">Neatedge</h3>
-              <p className="text-sm text-grey-light">
-                Professional cleaning services across West London, serving residential, commercial and property professionals.
+              <h3 className="font-cinzel text-2xl font-bold mb-sm text-white">Neatedge</h3>
+              <p className="font-josefin text-xs sm:text-sm text-grey-light/90 font-medium uppercase tracking-wider mb-md">Professional Cleaning Across West London</p>
+              <p className="font-josefin text-sm text-grey-light leading-relaxed">
+                Trusted by residential, commercial clients and property professionals across West London. Professional standards, personal accountability.
               </p>
             </div>
 
             {/* Column 2: Services */}
             <div>
-              <h4 className="font-bold text-brand-gold mb-md uppercase text-sm tracking-wider">Services</h4>
-              <ul className="space-y-sm text-sm">
-                <li><Link href="/residential" className="hover:text-brand-gold transition-colors">Residential Cleaning</Link></li>
-                <li><Link href="/commercial" className="hover:text-brand-gold transition-colors">Commercial Cleaning</Link></li>
-                <li><Link href="/property-professionals" className="hover:text-brand-gold transition-colors">Property Professionals</Link></li>
-                <li><Link href="/areas" className="hover:text-brand-gold transition-colors">Service Areas</Link></li>
+              <h4 className="font-cinzel font-bold text-brand-gold mb-lg uppercase text-xs tracking-wider">Services</h4>
+              <ul className="space-y-sm text-sm font-josefin">
+                <li><Link href="/residential" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Residential Cleaning</Link></li>
+                <li><Link href="/commercial" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Commercial Cleaning</Link></li>
+                <li><Link href="/" className="text-grey-light hover:text-brand-gold transition-colors duration-200">End of Tenancy</Link></li>
+                <li><Link href="/" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Deep Cleaning</Link></li>
+                <li><Link href="/" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Office Cleaning</Link></li>
+                <li><Link href="/" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Carpet Cleaning</Link></li>
               </ul>
             </div>
 
             {/* Column 3: Company */}
             <div>
-              <h4 className="font-bold text-brand-gold mb-md uppercase text-sm tracking-wider">Company</h4>
-              <ul className="space-y-sm text-sm">
-                <li><Link href="/about" className="hover:text-brand-gold transition-colors">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-brand-gold transition-colors">Contact</Link></li>
-                <li><Link href="/privacy" className="hover:text-brand-gold transition-colors">Privacy Policy</Link></li>
+              <h4 className="font-cinzel font-bold text-brand-gold mb-lg uppercase text-xs tracking-wider">Company</h4>
+              <ul className="space-y-sm text-sm font-josefin">
+                <li><Link href="/about" className="text-grey-light hover:text-brand-gold transition-colors duration-200">About Us</Link></li>
+                <li><Link href="/areas" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Service Areas</Link></li>
+                <li><Link href="/property-professionals" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Property Professionals</Link></li>
+                <li><Link href="/contact" className="text-grey-light hover:text-brand-gold transition-colors duration-200">Contact</Link></li>
               </ul>
             </div>
 
-            {/* Column 4: Contact */}
+            {/* Column 4: Get In Touch */}
             <div>
-              <h4 className="font-bold text-brand-gold mb-md uppercase text-sm tracking-wider">Get In Touch</h4>
-              <div className="space-y-md text-sm">
-                <p>
-                  <span className="text-brand-gold">Email:</span>
-                  <br />
-                  <a href="mailto:info@neatedgecleaning.com" className="hover:text-brand-gold transition-colors">
+              <h4 className="font-cinzel font-bold text-brand-gold mb-lg uppercase text-xs tracking-wider">Get In Touch</h4>
+              <div className="space-y-md font-josefin">
+                <div>
+                  <p className="text-grey-light text-xs uppercase tracking-wide mb-xs">Email</p>
+                  <a
+                    href="mailto:info@neatedgecleaning.com"
+                    className="text-white hover:text-brand-gold transition-colors duration-200 break-all font-medium"
+                  >
                     info@neatedgecleaning.com
                   </a>
-                </p>
-                <p>
-                  <span className="text-brand-gold">Phone:</span>
-                  <br />
-                  <a href="tel:07886091926" className="hover:text-brand-gold transition-colors">
+                </div>
+                <div>
+                  <p className="text-grey-light text-xs uppercase tracking-wide mb-xs">Phone</p>
+                  <a
+                    href="tel:07886091926"
+                    className="text-white hover:text-brand-gold transition-colors duration-200 font-medium"
+                  >
                     07886 091926
                   </a>
-                </p>
-                <p className="text-grey-light">West London, UK</p>
+                </div>
+                <div>
+                  <p className="text-grey-light text-xs uppercase tracking-wide mb-xs">Location</p>
+                  <p className="text-white font-medium">West London, UK</p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Bottom bar */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-md text-sm text-grey-light">
-            <p>&copy; 2026 Neatedge Cleaning. All rights reserved.</p>
-            <p>Company Number: 14909903</p>
+          {/* Bottom bar — Minimal but precise */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-md text-xs text-grey-light font-josefin">
+            <div className="flex flex-col sm:flex-row gap-sm sm:gap-md">
+              <p>&copy; 2026 Neatedge Cleaning</p>
+              <p className="hidden sm:block">•</p>
+              <p>Company No. 14909903</p>
+            </div>
+            <div className="flex flex-wrap gap-md">
+              <Link href="/privacy" className="hover:text-brand-gold transition-colors">Privacy</Link>
+              <span>•</span>
+              <Link href="/terms" className="hover:text-brand-gold transition-colors">Terms</Link>
+              <span>•</span>
+              <Link href="/cookies" className="hover:text-brand-gold transition-colors">Cookies</Link>
+              <span>•</span>
+              <Link href="/accessibility" className="hover:text-brand-gold transition-colors">Accessibility</Link>
+            </div>
           </div>
         </div>
       </footer>
+
+      {/* Global styles for Cinzel and Josefin Sans */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&display=swap');
+
+        .font-cinzel {
+          font-family: 'Cinzel', serif;
+        }
+
+        .font-josefin {
+          font-family: 'Josefin Sans', sans-serif;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+        }
+      `}</style>
     </>
   );
 }
