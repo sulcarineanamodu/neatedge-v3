@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function proxy(request: NextRequest) {
+  const response = NextResponse.next();
+
+  // Pass pathname to layout for canonical URL generation
+  response.headers.set('x-pathname', request.nextUrl.pathname);
+
+  // Admin auth check
   if (
     request.nextUrl.pathname === '/admin/login' ||
     !request.nextUrl.pathname.startsWith('/admin')
   ) {
-    return NextResponse.next();
+    return response;
   }
 
   const sessionCookie = request.cookies.get('admin_session');
@@ -14,9 +20,9 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin/login', request.url));
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)', '/admin/:path*'],
 };
