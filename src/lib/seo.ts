@@ -3,6 +3,7 @@
  * Metadata, structured data, and SEO helpers
  */
 
+import type { Metadata } from 'next';
 import type { PageMetadata } from '@/types';
 import { getRobotsObject } from '@/lib/environment';
 
