@@ -1,0 +1,83 @@
+HOMEPAGE HEADER DUPLICATION FIX
+================================
+
+ISSUE IDENTIFIED
+================
+The homepage was rendering TWO headers simultaneously, causing duplicated logo and CTA elements:
+
+1. Global Header Component (from layout.tsx)
+   - File: src/app/layout.tsx
+   - Component: src/components/Header.tsx
+   - Renders: 1 logo, navigation, 1 phone, 1 "Get Estimate" button
+
+2. Duplicate Hardcoded Header (from page.tsx)
+   - File: src/app/page.tsx
+   - Lines: 65-117 (REMOVED)
+   - Was rendering: 1 duplicate logo, navigation, 1 phone, 1 "Get Estimate" button
+
+Result: Users saw duplicate logos and CTAs overlapping
+
+
+SOLUTION IMPLEMENTED
+====================
+
+File: src/app/page.tsx
+
+REMOVED (Lines 65-117):
+- Entire hardcoded <header> element with fixed positioning
+- Duplicate logo with text "Neatedge"
+- Duplicate navigation links (Residential, Commercial, etc.)
+- Duplicate "Get Estimate" CTA button
+- Duplicate phone number display
+
+CLEANED UP:
+- Removed unused `scrolled` state variable (was only used for the deleted header)
+- Removed useEffect hook that tracked scroll position
+- Removed `pt-28` padding from hero section (was added to offset fixed header)
+
+
+VERIFICATION
+============
+After fix, the header structure is now:
+
+Desktop (768px+):
+✓ 1 Neatedge logo
+✓ 1 Residential link
+✓ 1 Commercial link
+✓ 1 Property Professionals link
+✓ 1 Services link
+✓ 1 Areas link
+✓ 1 About link
+✓ 1 Contact link
+✓ 1 Phone number (07886 091926)
+✓ 1 "Get an Estimate" button
+
+Mobile (< 768px):
+✓ 1 Neatedge logo (not in menu)
+✓ 1 Menu toggle button
+✓ Navigation items in collapsible menu
+✓ 1 "Get an Estimate" button
+
+No overlapping elements at any breakpoint.
+
+
+FILES CHANGED
+=============
+1. src/app/page.tsx
+   - Removed duplicate header markup
+   - Removed scrolled state
+   - Removed scroll effect hook
+   - Removed pt-28 hero padding
+
+
+FILES UNCHANGED
+===============
+- src/components/Header.tsx (no changes - component is correct)
+- src/app/layout.tsx (no changes - global header is correct)
+- All homepage sections
+- All images and imagery
+- Footer
+- Backend/API
+- Supabase
+- CRM functionality
+- Chatbot

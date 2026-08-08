@@ -45,22 +45,83 @@ const pulseVariants = {
 };
 
 export default function Home() {
+  const [scrolled, setScrolled] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+
     // Check for prefers-reduced-motion
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mediaQuery.matches);
+
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <>
+      {/* PREMIUM STICKY HEADER — Trust & Authority Pattern */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'bg-white shadow-lg backdrop-blur-md'
+            : 'bg-gradient-to-b from-brand-navy/40 to-transparent'
+        }`}
+      >
+        <div className="max-w-container mx-auto px-md h-20 flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="font-bold text-2xl font-cinzel">
+            <span className={scrolled ? 'text-brand-navy' : 'text-white'}>Neatedge</span>
+          </Link>
+
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center gap-2xl">
+            {[
+              { name: 'Residential', href: '/residential' },
+              { name: 'Commercial', href: '/commercial' },
+              { name: 'Property Professionals', href: '/property-professionals' },
+              { name: 'Services', href: '/services' },
+              { name: 'Areas', href: '/areas' },
+              { name: 'About', href: '/about' }
+            ].map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`text-sm font-medium transition-colors duration-200 hover:text-brand-gold ${
+                  scrolled ? 'text-brand-navy' : 'text-white'
+                }`}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+
+          {/* CTA Group */}
+          <div className="flex items-center gap-lg">
+            <a
+              href="tel:07886091926"
+              className={`text-sm font-medium transition-colors duration-200 ${
+                scrolled ? 'text-brand-navy hover:text-brand-gold' : 'text-white hover:text-brand-gold'
+              }`}
+            >
+              📞 07886 091926
+            </a>
+            <a href="/contact?enquiry=estimate">
+              <Button variant={scrolled ? 'primary' : 'ghost'} size="sm">
+                Get Estimate
+              </Button>
+            </a>
+          </div>
+        </div>
+      </header>
+
       {/* PREMIUM HERO — Cinematic, Responsive, Professional */}
-      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-28">
         {/* Background image with overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/neatedge-curated/hero.webp"
+            src="/images/neatedge/hero.jpg"
             alt="Professional cleaning service in West London"
             fill
             className="object-cover"
@@ -231,7 +292,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-64 sm:h-80 md:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-lg">
                   <Image
-                    src="/images/neatedge-curated/end-of-tenancy.webp"
+                    src="/images/neatedge/end-of-tenancy.jpg"
                     alt="End of Tenancy Cleaning - Bright modern apartment"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -264,7 +325,7 @@ export default function Home() {
               <div className="group cursor-pointer h-full">
                 <div className="relative h-64 sm:h-96 md:h-full rounded-2xl overflow-hidden shadow-lg mb-lg">
                   <Image
-                    src="/images/neatedge-curated/deep-cleaning.webp"
+                    src="/images/neatedge/deep-cleaning.jpg"
                     alt="Deep Cleaning - Professional cleaning work"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -297,7 +358,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
                   <Image
-                    src="/images/neatedge-curated/commercial.webp"
+                    src="/images/neatedge/commercial.jpg"
                     alt="Office Cleaning"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -351,7 +412,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
                   <Image
-                    src="/images/neatedge-curated/commercial.webp"
+                    src="/images/neatedge/commercial.jpg"
                     alt="Commercial Cleaning"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -384,7 +445,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-2xl">
                 <Image
-                  src="/images/neatedge-curated/residential.webp"
+                  src="/images/neatedge/end-of-tenancy.jpg"
                   alt="Beautiful residential home interior"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -414,7 +475,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-2xl">
                 <Image
-                  src="/images/neatedge-curated/commercial.webp"
+                  src="/images/neatedge/commercial.jpg"
                   alt="Professional commercial office space"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -451,7 +512,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src="/images/neatedge-curated/property-professionals.webp"
+                  src="/images/neatedge/team-working.jpg"
                   alt="Modern apartment property turnaround"
                   fill
                   className="object-cover"
@@ -582,7 +643,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[450px] rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src="/images/neatedge-curated/why-neatedge.webp"
+                  src="/images/neatedge/property-professionals.jpg"
                   alt="Professional cleaner ensuring high standards"
                   fill
                   className="object-cover"
@@ -623,7 +684,7 @@ export default function Home() {
         {/* Full-width background image with overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/neatedge-curated/final-cta.webp"
+            src="/images/neatedge/commercial.jpg"
             alt="Premium modern property interior"
             fill
             className="object-cover"
