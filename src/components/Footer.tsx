@@ -28,7 +28,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-sm">
               <li>
                 <a
-                  href="/services/commercial-cleaning"
+                  href="/commercial"
                   className="text-body-sm hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
                 >
                   Commercial Cleaning
@@ -36,7 +36,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="/services/residential-cleaning"
+                  href="/residential"
                   className="text-body-sm hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
                 >
                   Residential Cleaning
@@ -44,10 +44,34 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="/services/end-of-tenancy"
+                  href="/services/end-of-tenancy-cleaning"
                   className="text-body-sm hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
                 >
                   End of Tenancy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/services/deep-cleaning"
+                  className="text-body-sm hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
+                >
+                  Deep Cleaning
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/services/carpet-cleaning"
+                  className="text-body-sm hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
+                >
+                  Carpet Cleaning
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/services/office-cleaning"
+                  className="text-body-sm hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
+                >
+                  Office Cleaning
                 </a>
               </li>
             </ul>
@@ -63,6 +87,14 @@ export const Footer: React.FC = () => {
                   className="text-body-sm hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
                 >
                   About Us
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/areas"
+                  className="text-body-sm hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
+                >
+                  Service Areas
                 </a>
               </li>
               <li>
@@ -100,10 +132,10 @@ export const Footer: React.FC = () => {
               <p>
                 Phone:{' '}
                 <a
-                  href="tel:+44XXXXXXXXX"
+                  href="tel:07886091926"
                   className="text-brand-gold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-1"
                 >
-                  +44 (0) XXXX XXX XXX
+                  07886 091926
                 </a>
               </p>
               <p>London, UK</p>
