@@ -30,8 +30,6 @@ export default function EndOfTenancyPage() {
           </div>
         </div>
       </section>
-        </div>
-      </section>
 
       <section className="bg-gray-100 py-8 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-around gap-6">
