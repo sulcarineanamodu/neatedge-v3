@@ -1,14 +1,33 @@
 'use client';
 
+import Image from 'next/image';
 import Footer from '@/components/Footer';
 
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-white">
-      <section className="bg-[#001F3F] text-white py-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl font-bold mb-4">Professional Cleaning With Local Accountability</h1>
-          <p className="text-xl text-gray-100">Founded on reliability, transparency, and genuine care for West London homes and businesses.</p>
+      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/neatedge-curated/why-neatedge.webp"
+            alt="About Neatedge cleaning"
+            fill
+            className="object-cover"
+            priority
+            quality={85}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/85 via-brand-navy/70 to-brand-navy/40"></div>
+        </div>
+
+        <div className="relative z-10 w-full px-md sm:px-lg md:px-xl">
+          <div className="max-w-4xl mx-auto text-white">
+            <h1 className="font-cinzel font-bold mb-lg sm:mb-xl leading-tight text-white" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>About Neatedge — Professional Cleaning, Delivered Properly</h1>
+            <p className="font-manrope text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed">Trusted by homeowners, businesses, and property professionals across West London since 2026. Founded on reliability, transparency, and genuine care.</p>
+            <div className="flex flex-col xs:flex-row gap-md sm:gap-lg">
+              <a href="#our-story" className="inline-block bg-brand-gold text-brand-navy font-semibold px-6 py-3 rounded hover:bg-yellow-400 transition-colors">Our Story</a>
+              <a href="/contact" className="inline-block border-2 border-brand-gold text-brand-gold font-semibold px-6 py-3 rounded hover:bg-brand-gold hover:text-brand-navy transition-colors">Contact Us</a>
+            </div>
+          </div>
         </div>
       </section>
 
