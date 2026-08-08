@@ -39,7 +39,7 @@ export const Header: React.FC<{ logoSrc?: string }> = ({ logoSrc }) => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-lg">
+        <div className="hidden lg:flex items-center gap-sm min-w-max flex-nowrap whitespace-nowrap">
           <a
             href="/"
             className="text-body font-medium hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-2 py-1"
@@ -91,7 +91,7 @@ export const Header: React.FC<{ logoSrc?: string }> = ({ logoSrc }) => {
         </div>
 
         {/* CTA and Phone */}
-        <div className="hidden md:flex items-center gap-md">
+        <div className="hidden lg:flex items-center gap-md flex-shrink-0 whitespace-nowrap">
           <a
             href="tel:07886091926"
             className="text-body font-medium hover:text-brand-gold transition-colors duration-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded px-2 py-1"
@@ -110,7 +110,7 @@ export const Header: React.FC<{ logoSrc?: string }> = ({ logoSrc }) => {
         <button
           onClick={toggleMenu}
           onKeyDown={handleKeyDown}
-          className="md:hidden p-2 rounded-base hover:bg-brand-midnight transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="lg:hidden p-2 rounded-base hover:bg-brand-midnight transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           aria-label="Toggle navigation menu"
           aria-expanded={isMenuOpen}
           aria-controls="mobile-menu"
@@ -136,7 +136,7 @@ export const Header: React.FC<{ logoSrc?: string }> = ({ logoSrc }) => {
       {isMenuOpen && (
         <div
           id="mobile-menu"
-          className="md:hidden bg-brand-midnight border-t border-brand-gold"
+          className="lg:hidden bg-brand-midnight border-t border-brand-gold"
         >
           <div className="px-md py-4 space-y-2">
             <a
