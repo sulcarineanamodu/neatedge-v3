@@ -2,57 +2,57 @@
 
 import { useState, useEffect, useRef } from 'react';
 import {
-  getActiveQuestions,
+  validateField,
   validateLeadData,
   generateWhatsAppMessage,
   ChatbotLeadData,
+  SERVICES,
+  BEDROOMS_OPTIONS,
+  BATHROOMS_OPTIONS,
+  CARPET_ROOMS_OPTIONS,
+  COMMERCIAL_TYPES,
+  LANDLORD_SERVICES,
+  TIMING_OPTIONS,
 } from '@/lib/chatbot-flow';
 
 const INITIAL_LEAD_DATA: ChatbotLeadData = {
-  name: '',
-  email: '',
-  telephone: '',
-  postcode: '',
   service: '',
-  propertyType: '',
+  postcode: '',
   bedrooms: '',
   bathrooms: '',
-  squareFootage: '',
-  frequency: '',
+  carpetRooms: '',
+  commercialType: '',
+  commercialFrequency: '',
+  landlordServiceType: '',
+  timing: '',
   preferredDate: '',
   additionalNotes: '',
-  privacyConsent: false,
-  marketingConsent: false,
 };
+
+type StepType = 'service' | 'postcode' | 'property-details' | 'timing' | 'summary';
 
 interface ChatMessage {
   id: string;
-  type: 'question' | 'answer' | 'error' | 'success';
+  type: 'message' | 'error';
   text: string;
   timestamp: number;
 }
 
 export default function ChatbotPanel() {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentStep, setCurrentStep] = useState<StepType>('service');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [leadData, setLeadData] = useState<Partial<ChatbotLeadData>>(
-    INITIAL_LEAD_DATA
-  );
+  const [leadData, setLeadData] = useState<Partial<ChatbotLeadData>>(INITIAL_LEAD_DATA);
   const [inputValue, setInputValue] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(null);
-  const [showCheckbox, setShowCheckbox] = useState(false);
-  const [isCheckboxQuestion, setIsCheckboxQuestion] = useState(false);
 
-  const activeQuestions = getActiveQuestions(leadData);
-  const currentQuestion = activeQuestions[currentQuestionIndex];
-  const progress = Math.round(((currentQuestionIndex + 1) / activeQuestions.length) * 100);
+  const steps: StepType[] = ['service', 'postcode', 'property-details', 'timing', 'summary'];
+  const stepIndex = steps.indexOf(currentStep);
 
-  // Scroll to bottom of messages
+  // Scroll to bottom
   const scrollToBottom = () => {
     setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -66,178 +66,262 @@ export default function ChatbotPanel() {
   // Initialize chatbot
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      const greeting = activeQuestions[0];
-      if (greeting) {
-        setMessages([
-          {
-            id: greeting.id,
-            type: 'question',
-            text: greeting.text,
-            timestamp: Date.now(),
-          },
-        ]);
-        setIsLoading(false);
-        setShowCheckbox(false);
-        setIsCheckboxQuestion(false);
-      }
+      setMessages([
+        {
+          id: 'service-question',
+          type: 'message',
+          text: 'Hi 👋 What can Neatedge help you with?',
+          timestamp: Date.now(),
+        },
+      ]);
     }
-  }, [isOpen, messages.length, activeQuestions]);
+  }, [isOpen, messages.length]);
 
-  // Handle answer submission
-  const handleSubmitAnswer = async (value: string | boolean) => {
-    if (!currentQuestion) return;
 
-    // Trim if string
-    const finalValue = typeof value === 'string' ? value.trim() : (value ? 'yes' : 'no');
+  // Validate and save service selection
+  const handleServiceSelect = (serviceValue: string) => {
+    setLeadData((prev) => ({
+      ...prev,
+      service: serviceValue as any,
+    }));
 
-    // Validate
-    if (currentQuestion.required && !finalValue) {
-      setError(currentQuestion.errorMessage || 'This field is required');
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `answer-${Date.now()}`,
+        type: 'message',
+        text: SERVICES.find((s) => s.value === serviceValue)?.label || serviceValue,
+        timestamp: Date.now(),
+      },
+    ]);
+
+    // Move to next step
+    setTimeout(() => {
+      setCurrentStep('postcode');
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: 'postcode-question',
+          type: 'message',
+          text: "What's the postcode for the property?",
+          timestamp: Date.now(),
+        },
+      ]);
+    }, 300);
+  };
+
+  // Validate and save postcode
+  const handlePostcodeSubmit = () => {
+    const trimmed = inputValue.trim().toUpperCase();
+
+    if (!trimmed) {
+      setError('Please enter a postcode');
       return;
     }
 
-    if (currentQuestion.validation && finalValue && !currentQuestion.validation(finalValue)) {
-      setError(currentQuestion.errorMessage || 'Invalid input');
+    if (!validateField('postcode', trimmed)) {
+      setError('Please enter a valid UK postcode (e.g., SW1A 1AA)');
       return;
     }
+
+    setLeadData((prev) => ({
+      ...prev,
+      postcode: trimmed,
+    }));
 
     setError(null);
 
-    // Add answer to messages
-    const answerMessage: ChatMessage = {
-      id: `answer-${Date.now()}`,
-      type: 'answer',
-      text: finalValue.toString(),
-      timestamp: Date.now(),
-    };
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `answer-${Date.now()}`,
+        type: 'message',
+        text: trimmed,
+        timestamp: Date.now(),
+      },
+    ]);
 
-    setMessages((prev) => [...prev, answerMessage]);
-
-    // Update lead data
-    const updatedData = {
-      ...leadData,
-      [currentQuestion.id]:
-        currentQuestion.type === 'text' && (currentQuestion.id === 'privacyConsent' || currentQuestion.id === 'marketingConsent')
-          ? value
-          : finalValue,
-    };
-    setLeadData(updatedData);
-
-    // Reset input
-    setInputValue('');
-    setShowCheckbox(false);
-
-    // Move to next question or submit
-    const nextIndex = currentQuestionIndex + 1;
-    if (nextIndex < activeQuestions.length) {
-      setCurrentQuestionIndex(nextIndex);
-      setIsLoading(true);
-
-      // Simulate typing indicator
-      setTimeout(() => {
-        const nextQuestion = activeQuestions[nextIndex];
-        if (nextQuestion) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: nextQuestion.id,
-              type: 'question',
-              text: nextQuestion.text,
-              timestamp: Date.now(),
-            },
-          ]);
-          setIsLoading(false);
-          setShowCheckbox(
-            nextQuestion.id === 'privacyConsent' || nextQuestion.id === 'marketingConsent'
-          );
-          setIsCheckboxQuestion(
-            nextQuestion.id === 'privacyConsent' || nextQuestion.id === 'marketingConsent'
-          );
-        }
-      }, 500);
-    } else {
-      // All questions answered - submit lead
-      await submitLead(updatedData as ChatbotLeadData);
-    }
+    // Move to property details
+    setTimeout(() => {
+      setCurrentStep('property-details');
+      setInputValue('');
+    }, 300);
   };
 
-  // Submit lead to API
-  const submitLead = async (data: ChatbotLeadData) => {
+  // Handle property details step
+  const handlePropertyDetailsSubmit = () => {
+    const { service } = leadData;
+
+    if (!service) {
+      setError('Service type is required');
+      return;
+    }
+
+    if (
+      service === 'residential-cleaning' ||
+      service === 'deep-cleaning' ||
+      service === 'end-of-tenancy'
+    ) {
+      if (!inputValue) {
+        setError('Please select bedroom and bathroom counts');
+        return;
+      }
+
+      const [beds, baths] = inputValue.split('|');
+      setLeadData((prev) => ({
+        ...prev,
+        bedrooms: beds,
+        bathrooms: baths,
+      }));
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `answer-${Date.now()}`,
+          type: 'message',
+          text: `${beds} bedrooms, ${baths} bathrooms`,
+          timestamp: Date.now(),
+        },
+      ]);
+    } else if (service === 'carpet-cleaning') {
+      if (!inputValue) {
+        setError('Please select number of rooms');
+        return;
+      }
+
+      setLeadData((prev) => ({
+        ...prev,
+        carpetRooms: inputValue,
+      }));
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `answer-${Date.now()}`,
+          type: 'message',
+          text: `${inputValue} room(s)`,
+          timestamp: Date.now(),
+        },
+      ]);
+    } else if (service === 'commercial') {
+      if (!inputValue) {
+        setError('Please select a premise type');
+        return;
+      }
+
+      setLeadData((prev) => ({
+        ...prev,
+        commercialType: inputValue as any,
+      }));
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `answer-${Date.now()}`,
+          type: 'message',
+          text: COMMERCIAL_TYPES.find((t) => t.value === inputValue)?.label || inputValue,
+          timestamp: Date.now(),
+        },
+      ]);
+    } else if (service === 'property-landlord') {
+      if (!inputValue) {
+        setError('Please select a service type');
+        return;
+      }
+
+      setLeadData((prev) => ({
+        ...prev,
+        landlordServiceType: inputValue,
+      }));
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `answer-${Date.now()}`,
+          type: 'message',
+          text: LANDLORD_SERVICES.find((s) => s.value === inputValue)?.label || inputValue,
+          timestamp: Date.now(),
+        },
+      ]);
+    }
+
+    setError(null);
+    setInputValue('');
+
+    // Move to timing
+    setTimeout(() => {
+      setCurrentStep('timing');
+    }, 300);
+  };
+
+  // Handle timing selection
+  const handleTimingSelect = (timingValue: string) => {
+    setLeadData((prev) => ({
+      ...prev,
+      timing: timingValue as any,
+    }));
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `answer-${Date.now()}`,
+        type: 'message',
+        text: TIMING_OPTIONS.find((t) => t.value === timingValue)?.label || timingValue,
+        timestamp: Date.now(),
+      },
+    ]);
+
+    // Move to summary
+    setTimeout(() => {
+      setCurrentStep('summary');
+      setInputValue('');
+    }, 300);
+  };
+
+  // Submit lead to CRM (called before WhatsApp handoff)
+  const submitLeadToCRM = async () => {
     setIsSubmitting(true);
     setError(null);
 
     try {
-      // Validate
-      const validation = validateLeadData(data);
+      const validation = validateLeadData(leadData as ChatbotLeadData);
       if (!validation.valid) {
-        setError(validation.errors.join(', '));
+        setError(validation.errors[0] || null);
         setIsSubmitting(false);
         return;
       }
 
-      // Submit to API
       const response = await fetch('/api/chatbot/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(leadData),
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
+        const result = await response.json();
         throw new Error(result.error || 'Failed to submit lead');
       }
 
-      // Show success message
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: 'success',
-          type: 'success',
-          text: `Great! We've received your inquiry. Our team will contact you shortly at ${data.telephone}.`,
-          timestamp: Date.now(),
-        },
-      ]);
-
-      // Offer WhatsApp option
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: 'whatsapp-offer',
-            type: 'question',
-            text: 'Would you like to continue the conversation on WhatsApp? We usually respond faster there.',
-            timestamp: Date.now(),
-          },
-        ]);
-        setShowCheckbox(false);
-        setIsCheckboxQuestion(false);
-        setIsSubmitting(false);
-      }, 1500);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
-      setError(errorMessage);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: 'error',
-          type: 'error',
-          text: errorMessage,
-          timestamp: Date.now(),
-        },
-      ]);
       setIsSubmitting(false);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+      setError(errorMessage || null);
+      setIsSubmitting(false);
+      console.error('Lead submission error:', err);
     }
   };
 
   // Handle WhatsApp handoff
-  const handleWhatsAppClick = (data: ChatbotLeadData) => {
-    const message = generateWhatsAppMessage(data);
+  const handleWhatsAppClick = async (data: Partial<ChatbotLeadData>) => {
+    // Save to CRM first
+    await submitLeadToCRM();
+
+    const message = generateWhatsAppMessage(data as ChatbotLeadData);
     const whatsappPhone = process.env.NEXT_PUBLIC_WHATSAPP_PHONE || '447700123456';
     const waLink = `https://wa.me/${whatsappPhone}?text=${message}`;
     window.open(waLink, '_blank');
 
-    // Track event
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'whatsapp_handoff_clicked');
     }
@@ -245,17 +329,157 @@ export default function ChatbotPanel() {
 
   // Handle restart
   const handleRestart = () => {
-    setCurrentQuestionIndex(0);
-    setMessages([]);
+    setCurrentStep('service');
+    setMessages([
+      {
+        id: 'service-question',
+        type: 'message',
+        text: 'Hi 👋 What can Neatedge help you with?',
+        timestamp: Date.now(),
+      },
+    ]);
     setLeadData(INITIAL_LEAD_DATA);
     setInputValue('');
     setError(null);
-    setShowCheckbox(false);
-    setIsCheckboxQuestion(false);
   };
 
-  // Determine if we're past the questions (showing success/WhatsApp offer)
-  const isPastQuestions = currentQuestionIndex >= activeQuestions.length;
+  const renderPropertyDetailsQuestion = () => {
+    const { service } = leadData;
+
+    if (
+      service === 'residential-cleaning' ||
+      service === 'deep-cleaning' ||
+      service === 'end-of-tenancy'
+    ) {
+      return (
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-grey-700 mb-2">Bedrooms</label>
+            <select
+              value={inputValue.split('|')[0] || ''}
+              onChange={(e) => {
+                const beds = e.target.value;
+                const baths = inputValue.split('|')[1] || '';
+                setInputValue(`${beds}|${baths}`);
+              }}
+              className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent text-sm"
+            >
+              <option value="">Select...</option>
+              {BEDROOMS_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-grey-700 mb-2">Bathrooms</label>
+            <select
+              value={inputValue.split('|')[1] || ''}
+              onChange={(e) => {
+                const beds = inputValue.split('|')[0] || '';
+                const baths = e.target.value;
+                setInputValue(`${beds}|${baths}`);
+              }}
+              className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent text-sm"
+            >
+              <option value="">Select...</option>
+              {BATHROOMS_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    if (service === 'carpet-cleaning') {
+      return (
+        <select
+          ref={inputRef as any}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent text-sm"
+        >
+          <option value="">How many rooms need carpet cleaning?</option>
+          {CARPET_ROOMS_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    if (service === 'commercial') {
+      return (
+        <select
+          ref={inputRef as any}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent text-sm"
+        >
+          <option value="">What type of premises?</option>
+          {COMMERCIAL_TYPES.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    if (service === 'property-landlord') {
+      return (
+        <select
+          ref={inputRef as any}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent text-sm"
+        >
+          <option value="">Select service type</option>
+          {LANDLORD_SERVICES.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    return null;
+  };
+
+  const getSummaryText = () => {
+    const lines: string[] = [];
+    const serviceLabel = SERVICES.find((s) => s.value === leadData.service)?.label;
+    if (serviceLabel) lines.push(`Service: ${serviceLabel}`);
+    if (leadData.postcode) lines.push(`Postcode: ${leadData.postcode}`);
+
+    if (
+      leadData.service === 'residential-cleaning' ||
+      leadData.service === 'deep-cleaning' ||
+      leadData.service === 'end-of-tenancy'
+    ) {
+      if (leadData.bedrooms || leadData.bathrooms) {
+        lines.push(`Property: ${leadData.bedrooms} bedrooms, ${leadData.bathrooms} bathrooms`);
+      }
+    } else if (leadData.service === 'carpet-cleaning' && leadData.carpetRooms) {
+      lines.push(`Carpet rooms: ${leadData.carpetRooms}`);
+    } else if (leadData.service === 'commercial' && leadData.commercialType) {
+      lines.push(`Premises: ${leadData.commercialType}`);
+    } else if (leadData.service === 'property-landlord' && leadData.landlordServiceType) {
+      lines.push(`Service: ${leadData.landlordServiceType}`);
+    }
+
+    const timingLabel = TIMING_OPTIONS.find((t) => t.value === leadData.timing)?.label;
+    if (timingLabel) lines.push(`When: ${timingLabel}`);
+
+    return lines.join(' · ');
+  };
 
   return (
     <>
@@ -289,7 +513,7 @@ export default function ChatbotPanel() {
           <div className="bg-brand-navy text-white px-6 py-4 rounded-t-2xl flex items-center justify-between">
             <div className="flex-1">
               <h2 className="text-lg font-semibold">Neatedge Cleaning</h2>
-              <p className="text-sm text-blue-100">Chat with us</p>
+              <p className="text-xs text-blue-100">About 30 seconds</p>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -312,13 +536,17 @@ export default function ChatbotPanel() {
             </button>
           </div>
 
-          {/* Progress Bar */}
-          {!isPastQuestions && (
-            <div className="w-full h-1 bg-grey-200">
-              <div
-                className="h-full bg-brand-gold transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
+          {/* Progress Indicator */}
+          {currentStep !== 'summary' && (
+            <div className="px-6 py-3 text-xs text-grey-600 flex items-center space-x-2">
+              {steps.map((step, idx) => (
+                <span
+                  key={step}
+                  className={`h-2 w-2 rounded-full transition-colors ${
+                    idx < stepIndex ? 'bg-brand-gold' : idx === stepIndex ? 'bg-brand-navy' : 'bg-grey-300'
+                  }`}
+                />
+              ))}
             </div>
           )}
 
@@ -334,35 +562,20 @@ export default function ChatbotPanel() {
                   <div
                     key={msg.id}
                     className={`flex ${
-                      msg.type === 'answer' ? 'justify-end' : 'justify-start'
+                      msg.type === 'error' ? 'justify-center' : 'justify-start'
                     }`}
                   >
                     <div
-                      className={`max-w-xs px-4 py-3 rounded-lg ${
-                        msg.type === 'question'
-                          ? 'bg-white text-brand-navy rounded-bl-none shadow-sm'
-                          : msg.type === 'answer'
-                          ? 'bg-brand-navy text-white rounded-br-none'
-                          : msg.type === 'success'
-                          ? 'bg-status-success/10 text-status-success border border-status-success/20'
-                          : 'bg-status-error/10 text-status-error border border-status-error/20'
-                      } text-sm leading-relaxed`}
+                      className={`max-w-xs px-4 py-2 rounded-lg text-sm ${
+                        msg.type === 'error'
+                          ? 'bg-status-error/10 text-status-error border border-status-error/20'
+                          : 'bg-white text-brand-navy rounded-bl-none shadow-sm'
+                      }`}
                     >
                       {msg.text}
                     </div>
                   </div>
                 ))}
-                {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-white text-brand-navy px-4 py-3 rounded-lg rounded-bl-none shadow-sm">
-                      <div className="flex space-x-2">
-                        <div className="w-2 h-2 bg-grey-600 rounded-full animate-bounce" />
-                        <div className="w-2 h-2 bg-grey-600 rounded-full animate-bounce delay-100" />
-                        <div className="w-2 h-2 bg-grey-600 rounded-full animate-bounce delay-200" />
-                      </div>
-                    </div>
-                  </div>
-                )}
                 <div ref={messagesEndRef} />
               </>
             )}
@@ -371,140 +584,132 @@ export default function ChatbotPanel() {
           {/* Input Area */}
           <div className="border-t border-grey-200 p-4 bg-white rounded-b-2xl">
             {error && (
-              <p className="text-sm text-status-error mb-3 px-2">
-                {error}
-              </p>
+              <p className="text-xs text-status-error mb-3 px-2">{error}</p>
             )}
 
-            {isPastQuestions ? (
-              // WhatsApp CTA Section
-              <div className="space-y-3">
-                <button
-                  onClick={() => handleWhatsAppClick(leadData as ChatbotLeadData)}
-                  className="w-full bg-status-success hover:bg-opacity-90 active:scale-95 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
+            {currentStep === 'service' && (
+              <div className="grid grid-cols-2 gap-2">
+                {SERVICES.map((service) => (
+                  <button
+                    key={service.value}
+                    onClick={() => handleServiceSelect(service.value)}
+                    className="px-3 py-2 text-xs border border-grey-300 rounded-lg hover:bg-brand-navy hover:text-white hover:border-brand-navy transition-colors text-center"
                   >
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.923 1.379c-.589.328-1.142.774-1.612 1.318l-.992-1.247a1.125 1.125 0 10-1.592 1.59l1.003 1.254a9.926 9.926 0 00-1.323 4.632v.001c0 5.473 4.447 9.92 9.92 9.92 5.473 0 9.92-4.447 9.92-9.92 0-5.473-4.447-9.92-9.92-9.92zm0-2c6.638 0 12 5.362 12 12s-5.362 12-12 12S0 18.638 0 12 5.362 0 12 0z" />
-                  </svg>
-                  <span>Continue on WhatsApp</span>
-                </button>
+                    {service.label}
+                  </button>
+                ))}
                 <button
-                  onClick={handleRestart}
-                  className="w-full bg-grey-light hover:bg-grey-200 active:scale-95 text-brand-navy font-semibold py-2 px-4 rounded-lg transition-all duration-200"
+                  className="px-3 py-2 text-xs border border-grey-300 rounded-lg hover:bg-brand-navy hover:text-white hover:border-brand-navy transition-colors text-center"
+                  onClick={() => handleServiceSelect('something-else')}
                 >
-                  Start Over
+                  Other
                 </button>
               </div>
-            ) : currentQuestion ? (
-              // Question Input
-              <div className="space-y-3">
-                {currentQuestion.type === 'select' ? (
-                  <select
-                    ref={inputRef as any}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent"
-                  >
-                    <option value="">Select an option...</option>
-                    {currentQuestion.options?.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : currentQuestion.type === 'textarea' ? (
-                  <textarea
-                    ref={inputRef as any}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder={currentQuestion.placeholder}
-                    className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none"
-                    rows={3}
-                  />
-                ) : currentQuestion.type === 'date' ? (
-                  <input
-                    ref={inputRef as any}
-                    type="date"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent"
-                  />
-                ) : (
-                  <input
-                    ref={inputRef as any}
-                    type={currentQuestion.type}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder={currentQuestion.placeholder}
-                    className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter' && !isLoading && !isSubmitting) {
-                        handleSubmitAnswer(inputValue);
-                      }
-                    }}
-                  />
-                )}
-                <button
-                  onClick={() => handleSubmitAnswer(inputValue)}
-                  disabled={isLoading || isSubmitting || (!showCheckbox && !inputValue.trim())}
-                  className="w-full bg-brand-navy hover:bg-brand-midnight active:scale-95 disabled:bg-grey-300 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Sending...' : 'Continue'}
-                </button>
-              </div>
-            ) : null}
+            )}
 
-            {isCheckboxQuestion && !isPastQuestions && (
+            {currentStep === 'postcode' && (
               <div className="space-y-3">
-                <label className="flex items-center space-x-3 cursor-pointer p-2 hover:bg-grey-50 rounded-lg">
-                  <input
-                    type="checkbox"
-                    checked={
-                      currentQuestion?.id === 'privacyConsent'
-                        ? (leadData.privacyConsent || false)
-                        : (leadData.marketingConsent || false)
-                    }
-                    onChange={(e) => {
-                      if (currentQuestion?.id === 'privacyConsent') {
-                        setLeadData({
-                          ...leadData,
-                          privacyConsent: e.target.checked,
-                        });
-                      } else if (currentQuestion?.id === 'marketingConsent') {
-                        setLeadData({
-                          ...leadData,
-                          marketingConsent: e.target.checked,
-                        });
-                      }
-                    }}
-                    className="w-4 h-4 accent-brand-navy rounded"
-                  />
-                  <span className="text-sm text-grey-700">
-                    {currentQuestion?.text}
-                  </span>
-                </label>
+                <input
+                  ref={inputRef as any}
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value.toUpperCase())}
+                  placeholder="UB7 8EY"
+                  className="w-full px-3 py-2 border border-grey-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent text-sm"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') handlePostcodeSubmit();
+                  }}
+                />
                 <button
-                  onClick={() => handleSubmitAnswer(
-                    currentQuestion?.id === 'privacyConsent'
-                      ? leadData.privacyConsent || false
-                      : leadData.marketingConsent || false
+                  onClick={handlePostcodeSubmit}
+                  disabled={!inputValue.trim()}
+                  className="w-full bg-brand-navy hover:bg-brand-midnight active:scale-95 disabled:bg-grey-300 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm disabled:cursor-not-allowed"
+                >
+                  Continue
+                </button>
+              </div>
+            )}
+
+            {currentStep === 'property-details' && (
+              <div className="space-y-3">
+                {renderPropertyDetailsQuestion()}
+                <button
+                  onClick={handlePropertyDetailsSubmit}
+                  disabled={!inputValue.trim()}
+                  className="w-full bg-brand-navy hover:bg-brand-midnight active:scale-95 disabled:bg-grey-300 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm disabled:cursor-not-allowed"
+                >
+                  Continue
+                </button>
+              </div>
+            )}
+
+            {currentStep === 'timing' && (
+              <div className="grid grid-cols-2 gap-2">
+                {TIMING_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => handleTimingSelect(opt.value)}
+                    className="px-3 py-2 text-xs border border-grey-300 rounded-lg hover:bg-brand-navy hover:text-white hover:border-brand-navy transition-colors text-center"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {currentStep === 'summary' && (
+              <div className="space-y-4">
+                <div className="bg-grey-50 rounded-lg p-4 border border-grey-200">
+                  <p className="text-xs font-semibold text-grey-700 mb-2">Your enquiry</p>
+                  <p className="text-sm text-grey-900">{getSummaryText()}</p>
+                  {leadData.additionalNotes && (
+                    <p className="text-xs text-grey-600 mt-2">Notes: {leadData.additionalNotes}</p>
                   )}
-                  disabled={isLoading || isSubmitting}
-                  className="w-full bg-brand-navy hover:bg-brand-midnight active:scale-95 disabled:bg-grey-300 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Sending...' : 'Continue'}
-                </button>
+                </div>
+
+                <div className="space-y-2">
+                  <button
+                    onClick={() => handleWhatsAppClick(leadData)}
+                    disabled={isSubmitting}
+                    className="w-full bg-status-success hover:bg-opacity-90 active:scale-95 disabled:bg-grey-300 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm disabled:cursor-not-allowed"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.923 1.379c-.589.328-1.142.774-1.612 1.318l-.992-1.247a1.125 1.125 0 10-1.592 1.59l1.003 1.254a9.926 9.926 0 00-1.323 4.632v.001c0 5.473 4.447 9.92 9.92 9.92 5.473 0 9.92-4.447 9.92-9.92 0-5.473-4.447-9.92-9.92-9.92zm0-2c6.638 0 12 5.362 12 12s-5.362 12-12 12S0 18.638 0 12 5.362 0 12 0z" />
+                    </svg>
+                    <span>Continue on WhatsApp</span>
+                  </button>
+
+                  <button
+                    onClick={handleRestart}
+                    className="w-full bg-grey-light hover:bg-grey-200 active:scale-95 text-brand-navy font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm"
+                  >
+                    Start Over
+                  </button>
+                </div>
+
+                <p className="text-xs text-centre text-grey-600 px-2 py-2">
+                  By continuing, you agree that Neatedge may use the details above to respond to
+                  your enquiry.{' '}
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-brand-navy hover:underline"
+                  >
+                    Privacy Policy
+                  </a>
+                </p>
               </div>
             )}
 
-            {!isPastQuestions && (
+            {currentStep !== 'summary' && (
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-full text-sm text-grey-600 hover:text-grey-700 py-2 transition-colors"
+                className="w-full text-xs text-grey-600 hover:text-grey-700 py-2 transition-colors"
               >
                 Close for now
               </button>

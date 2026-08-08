@@ -1,265 +1,140 @@
-// Chatbot conversation flow and lead qualification logic
+// Simplified chatbot conversation flow (30-second WhatsApp concierge)
+// Maximum 5 steps: Service → Postcode → Property Details → When → Summary
 
 export type ServiceType =
   | 'residential-cleaning'
   | 'deep-cleaning'
   | 'end-of-tenancy'
   | 'carpet-cleaning'
-  | 'office-cleaning'
+  | 'property-landlord'
   | 'commercial';
 
-export type PropertyType =
-  | 'apartment'
-  | 'house'
-  | 'bungalow'
-  | 'office'
-  | 'retail'
-  | 'warehouse'
-  | 'other';
+export type CommercialType = 'office' | 'retail' | 'communal' | 'hospitality' | 'other';
 
-export type FrequencyType =
-  | 'one-off'
-  | 'weekly'
-  | 'bi-weekly'
-  | 'monthly'
-  | 'quarterly'
-  | 'other';
+export type CommercialFrequency = 'one-off' | 'regular';
+
+export type TimingOption = 'asap' | 'this-week' | 'next-week' | 'choose-date' | 'quote';
 
 export interface ChatbotLeadData {
-  name: string;
-  email: string;
-  telephone: string;
-  postcode: string;
   service: ServiceType | '';
-  propertyType: PropertyType | '';
+  postcode: string;
   bedrooms?: string;
   bathrooms?: string;
-  squareFootage?: string;
-  frequency?: FrequencyType | '';
+  carpetRooms?: string;
+  commercialType?: CommercialType | '';
+  commercialFrequency?: CommercialFrequency | '';
+  landlordServiceType?: string;
+  timing: TimingOption | '';
   preferredDate?: string;
   additionalNotes?: string;
-  privacyConsent: boolean;
-  marketingConsent: boolean;
-}
-
-export interface ChatbotQuestion {
-  id: string;
-  text: string;
-  type: 'text' | 'email' | 'phone' | 'select' | 'date' | 'textarea' | 'postcode' | 'number';
-  options?: { value: string; label: string }[];
-  validation?: (value: string) => boolean;
-  errorMessage?: string;
-  required?: boolean;
-  placeholder?: string;
-  conditional?: (data: Partial<ChatbotLeadData>) => boolean;
+  name?: string;
 }
 
 export const SERVICES: { value: ServiceType; label: string }[] = [
   { value: 'residential-cleaning', label: 'Residential Cleaning' },
   { value: 'deep-cleaning', label: 'Deep Cleaning' },
-  { value: 'end-of-tenancy', label: 'End of Tenancy Cleaning' },
+  { value: 'end-of-tenancy', label: 'End of Tenancy' },
   { value: 'carpet-cleaning', label: 'Carpet Cleaning' },
-  { value: 'office-cleaning', label: 'Office Cleaning' },
-  { value: 'commercial', label: 'Commercial' },
+  { value: 'property-landlord', label: 'Property / Landlord Cleaning' },
+  { value: 'commercial', label: 'Commercial Cleaning' },
 ];
 
-export const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
-  { value: 'apartment', label: 'Apartment' },
-  { value: 'house', label: 'House' },
-  { value: 'bungalow', label: 'Bungalow' },
+export const COMMERCIAL_TYPES: { value: CommercialType; label: string }[] = [
   { value: 'office', label: 'Office' },
-  { value: 'retail', label: 'Retail Space' },
-  { value: 'warehouse', label: 'Warehouse' },
+  { value: 'retail', label: 'Retail' },
+  { value: 'communal', label: 'Communal Area' },
+  { value: 'hospitality', label: 'Hospitality' },
   { value: 'other', label: 'Other' },
 ];
 
-export const FREQUENCIES: { value: FrequencyType; label: string }[] = [
-  { value: 'one-off', label: 'One-off Clean' },
-  { value: 'weekly', label: 'Weekly' },
-  { value: 'bi-weekly', label: 'Bi-weekly' },
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'quarterly', label: 'Quarterly' },
-  { value: 'other', label: 'Other' },
+export const COMMERCIAL_FREQUENCIES: { value: CommercialFrequency; label: string }[] = [
+  { value: 'one-off', label: 'One-off' },
+  { value: 'regular', label: 'Regular' },
 ];
 
-// Chatbot conversation flow
-export const CHATBOT_FLOW: ChatbotQuestion[] = [
-  {
-    id: 'greeting',
-    text: "Hi! Welcome to Neatedge Cleaning. Whats your name?",
-    type: 'text',
-    required: true,
-    placeholder: 'Your full name',
-    validation: (value) => value.trim().length >= 2,
-    errorMessage: 'Please enter a valid name',
-  },
-  {
-    id: 'email',
-    text: 'What email should we use to contact you?',
-    type: 'email',
-    required: true,
-    placeholder: 'your@email.com',
-    validation: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-    errorMessage: 'Please enter a valid email address',
-  },
-  {
-    id: 'telephone',
-    text: 'Whats your phone number?',
-    type: 'phone',
-    required: true,
-    placeholder: '07700 123456',
-    validation: (value) => /^[\d\s\-+()]{10,20}$/.test(value),
-    errorMessage: 'Please enter a valid phone number',
-  },
-  {
-    id: 'postcode',
-    text: 'Whats your postcode?',
-    type: 'postcode',
-    required: true,
-    placeholder: 'SW1A 1AA',
-    validation: (value) => /^[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2}$/i.test(value),
-    errorMessage: 'Please enter a valid UK postcode',
-  },
-  {
-    id: 'service',
-    text: 'What cleaning service do you need?',
-    type: 'select',
-    options: SERVICES.map((s) => ({ value: s.value, label: s.label })),
-    required: true,
-    validation: (value) => SERVICES.some((s) => s.value === value),
-    errorMessage: 'Please select a service',
-  },
-  {
-    id: 'propertyType',
-    text: 'What type of property?',
-    type: 'select',
-    options: PROPERTY_TYPES.map((p) => ({ value: p.value, label: p.label })),
-    required: true,
-    validation: (value) => PROPERTY_TYPES.some((p) => p.value === value),
-    errorMessage: 'Please select a property type',
-    conditional: () => {
-      // Show property type for all services
-      return true;
-    },
-  },
-  {
-    id: 'bedrooms',
-    text: 'How many bedrooms?',
-    type: 'number',
-    placeholder: '3',
-    conditional: (data) =>
-      data.propertyType === 'apartment' ||
-      data.propertyType === 'house' ||
-      data.propertyType === 'bungalow',
-  },
-  {
-    id: 'bathrooms',
-    text: 'How many bathrooms?',
-    type: 'number',
-    placeholder: '2',
-    conditional: (data) =>
-      data.propertyType === 'apartment' ||
-      data.propertyType === 'house' ||
-      data.propertyType === 'bungalow',
-  },
-  {
-    id: 'squareFootage',
-    text: 'Approximate square footage? (optional)',
-    type: 'number',
-    placeholder: '2000',
-    conditional: (data) =>
-      data.propertyType === 'office' ||
-      data.propertyType === 'retail' ||
-      data.propertyType === 'warehouse' ||
-      data.propertyType === 'other',
-  },
-  {
-    id: 'frequency',
-    text: 'How often do you need this service?',
-    type: 'select',
-    options: FREQUENCIES.map((f) => ({ value: f.value, label: f.label })),
-    required: true,
-    conditional: (data) => data.service !== 'end-of-tenancy',
-  },
-  {
-    id: 'preferredDate',
-    text: 'When would you like the service?',
-    type: 'date',
-    required: false,
-    conditional: (data) =>
-      data.service === 'end-of-tenancy' || data.frequency === 'one-off',
-  },
-  {
-    id: 'additionalNotes',
-    text: 'Any additional details we should know? (optional)',
-    type: 'textarea',
-    placeholder: 'E.g., specific areas of concern, access details, etc.',
-    validation: (value) => (value ? value.length <= 2000 : true),
-    errorMessage: 'Additional notes must be less than 2000 characters',
-  },
-  {
-    id: 'privacyConsent',
-    text: 'I agree to the privacy policy',
-    type: 'text', // Will be handled as checkbox in UI
-    required: true,
-  },
-  {
-    id: 'marketingConsent',
-    text: 'I would like to receive updates about special offers',
-    type: 'text', // Will be handled as checkbox in UI
-    required: false,
-  },
+export const LANDLORD_SERVICES: { value: string; label: string }[] = [
+  { value: 'property-turnaround', label: 'Property turnaround' },
+  { value: 'end-of-tenancy', label: 'End of tenancy' },
+  { value: 'pre-tenancy', label: 'Pre-tenancy clean' },
+  { value: 'airbnb', label: 'Airbnb / serviced accommodation' },
+  { value: 'portfolio-support', label: 'Ongoing portfolio support' },
 ];
 
-// Get questions to display based on conditional logic
-export function getActiveQuestions(
-  data: Partial<ChatbotLeadData>
-): ChatbotQuestion[] {
-  return CHATBOT_FLOW.filter((question) => {
-    if (question.conditional) {
-      return question.conditional(data);
-    }
-    return true;
-  });
+export const BEDROOMS_OPTIONS = [
+  { value: 'studio', label: 'Studio' },
+  { value: '1', label: '1' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+  { value: '4', label: '4' },
+  { value: '5+', label: '5+' },
+];
+
+export const BATHROOMS_OPTIONS = [
+  { value: '1', label: '1' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+  { value: '4+', label: '4+' },
+];
+
+export const CARPET_ROOMS_OPTIONS = [
+  { value: '1', label: '1' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+  { value: '4', label: '4' },
+  { value: '5+', label: '5+' },
+];
+
+export const TIMING_OPTIONS = [
+  { value: 'asap', label: 'ASAP' },
+  { value: 'this-week', label: 'This week' },
+  { value: 'next-week', label: 'Next week' },
+  { value: 'choose-date', label: 'Choose a date' },
+  { value: 'quote', label: 'Just getting a quote' },
+];
+
+// Get the next step after current step
+export function getNextStep(currentStep: string): string | null {
+  switch (currentStep) {
+    case 'service':
+      return 'postcode';
+    case 'postcode':
+      return 'property-details';
+    case 'property-details':
+      return 'timing';
+    case 'timing':
+      return 'summary';
+    case 'summary':
+      return null;
+    default:
+      return 'service';
+  }
 }
 
-// Validate lead data
+// Validate single field
+export function validateField(fieldId: string, value: string): boolean {
+  if (fieldId === 'postcode') {
+    return /^[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2}$/i.test(value);
+  }
+  return true;
+}
+
+// Validate lead data for CRM submission
 export function validateLeadData(data: Partial<ChatbotLeadData>): {
   valid: boolean;
   errors: string[];
 } {
   const errors: string[] = [];
 
-  if (!data.name || data.name.trim().length < 2) {
-    errors.push('Name is required (min 2 characters)');
-  }
-
-  if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.push('Valid email is required');
-  }
-
-  if (!data.telephone || !/^[\d\s\-+()]{10,20}$/.test(data.telephone)) {
-    errors.push('Valid phone number is required');
+  if (!data.service) {
+    errors.push('Service is required');
   }
 
   if (!data.postcode || !/^[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2}$/i.test(data.postcode)) {
     errors.push('Valid UK postcode is required');
   }
 
-  if (!data.service || data.service.trim() === '') {
-    errors.push('Service selection is required');
-  }
-
-  if (!data.propertyType || data.propertyType.trim() === '') {
-    errors.push('Property type is required');
-  }
-
-  if (data.service !== 'end-of-tenancy' && (!data.frequency || data.frequency.trim() === '')) {
-    errors.push('Frequency is required');
-  }
-
-  if (!data.privacyConsent) {
-    errors.push('You must accept the privacy policy');
+  if (!data.timing) {
+    errors.push('Preferred timing is required');
   }
 
   return {
@@ -268,48 +143,73 @@ export function validateLeadData(data: Partial<ChatbotLeadData>): {
   };
 }
 
-// Generate pre-filled WhatsApp message
+// Generate clean WhatsApp message with only non-empty fields
 export function generateWhatsAppMessage(data: ChatbotLeadData): string {
   const lines = [
-    `*New Cleaning Service Inquiry*`,
+    `Hello Neatedge Cleaning 👋`,
     ``,
-    `*Name:* ${data.name}`,
-    `*Email:* ${data.email}`,
-    `*Phone:* ${data.telephone}`,
-    `*Postcode:* ${data.postcode}`,
-    `*Service:* ${SERVICES.find((s) => s.value === data.service)?.label || data.service}`,
-    `*Property Type:* ${PROPERTY_TYPES.find((p) => p.value === data.propertyType)?.label || data.propertyType}`,
+    `I'd like a quotation.`,
+    ``,
   ];
 
-  if (data.bedrooms) {
-    lines.push(`*Bedrooms:* ${data.bedrooms}`);
+  // Service
+  const serviceLabel = SERVICES.find((s) => s.value === data.service)?.label || data.service;
+  lines.push(`Service: ${serviceLabel}`);
+
+  // Postcode
+  lines.push(`Postcode: ${data.postcode}`);
+
+  // Property details based on service
+  if (
+    data.service === 'residential-cleaning' ||
+    data.service === 'deep-cleaning' ||
+    data.service === 'end-of-tenancy'
+  ) {
+    const propertyInfo: string[] = [];
+    if (data.bedrooms) propertyInfo.push(`${data.bedrooms} bedrooms`);
+    if (data.bathrooms) propertyInfo.push(`${data.bathrooms} bathrooms`);
+    if (propertyInfo.length > 0) {
+      lines.push(`Property: ${propertyInfo.join(', ')}`);
+    }
+  } else if (data.service === 'carpet-cleaning') {
+    if (data.carpetRooms) {
+      lines.push(`Carpet rooms: ${data.carpetRooms}`);
+    }
+  } else if (data.service === 'commercial') {
+    if (data.commercialType) {
+      lines.push(`Premises: ${data.commercialType}`);
+    }
+    if (data.commercialFrequency) {
+      lines.push(`Frequency: ${data.commercialFrequency}`);
+    }
+  } else if (data.service === 'property-landlord') {
+    if (data.landlordServiceType) {
+      lines.push(`Service type: ${data.landlordServiceType}`);
+    }
   }
 
-  if (data.bathrooms) {
-    lines.push(`*Bathrooms:* ${data.bathrooms}`);
+  // Timing
+  const timingLabel = TIMING_OPTIONS.find((t) => t.value === data.timing)?.label || data.timing;
+  lines.push(`Preferred date: ${timingLabel}`);
+
+  if (data.preferredDate && data.timing === 'choose-date') {
+    lines.push(`Specific date: ${data.preferredDate}`);
   }
 
-  if (data.squareFootage) {
-    lines.push(`*Square Footage:* ${data.squareFootage} sqft`);
-  }
-
-  if (data.frequency && data.frequency !== 'one-off') {
-    lines.push(
-      `*Frequency:* ${FREQUENCIES.find((f) => f.value === data.frequency)?.label || data.frequency}`
-    );
-  }
-
-  if (data.preferredDate) {
-    lines.push(`*Preferred Date:* ${data.preferredDate}`);
-  }
-
+  // Notes (only if provided)
   if (data.additionalNotes) {
-    lines.push(`*Notes:* ${data.additionalNotes}`);
+    lines.push(`Notes: ${data.additionalNotes}`);
   }
 
-  lines.push(``, `*Source:* Website Chatbot`);
+  // Name (only if provided)
+  if (data.name) {
+    lines.push(`Name: ${data.name}`);
+  }
 
-  return lines.join(`%0A`);
+  lines.push(``, `Sent from neatedgecleaning.com`);
+
+  // Replace line breaks with %0A for URL encoding
+  return lines.join('%0A');
 }
 
 // Generate lead source for database
