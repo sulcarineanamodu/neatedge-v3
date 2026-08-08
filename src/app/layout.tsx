@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import React from 'react';
-import { headers } from 'next/headers';
 import Header from '@/components/Header';
 import StagingBanner from '@/components/StagingBanner';
 import ChatbotPanel from '@/components/ChatbotPanel';
@@ -8,9 +7,9 @@ import { generateMetadata as generateSeoMetadata } from '@/lib/seo';
 import { getRobotsObject } from '@/lib/environment';
 import '@/styles/globals.css';
 
-// Get pathname from middleware for per-page canonical URLs
-const pathname = headers().get('x-pathname') || '/';
-const seoMetadata = generateSeoMetadata(undefined, pathname);
+// Root layout uses default homepage canonical
+// Pathname-specific canonicals are generated dynamically via proxy header
+const seoMetadata = generateSeoMetadata();
 
 export const metadata: Metadata = {
   title: seoMetadata.title,
