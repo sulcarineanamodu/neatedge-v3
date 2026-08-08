@@ -20,6 +20,69 @@ export const DEFAULT_METADATA: PageMetadata = {
 };
 
 /**
+ * Page-specific metadata overrides
+ * Each page should have its own title, description, and self-referencing canonical
+ */
+export const PAGE_METADATA: Record<string, Partial<PageMetadata>> = {
+  '/': DEFAULT_METADATA,
+  '/about': {
+    title: 'About Neatedge Cleaning | Professional Cleaning in West London',
+    description: 'Founded on reliability, accountability, and respect. Learn about the Neatedge Cleaning team, our values, and why we\'re trusted by West London homes and businesses.',
+    canonical: 'https://neatedgecleaning.com/about',
+  },
+  '/areas': {
+    title: 'Service Areas | Neatedge Cleaning West London & Surroundings',
+    description: 'We serve Uxbridge, West Drayton, Hayes, Hillingdon and surrounding areas. Local service, fast response times, genuine accountability.',
+    canonical: 'https://neatedgecleaning.com/areas',
+  },
+  '/commercial': {
+    title: 'Commercial Office Cleaning | Flexible Scheduling | Neatedge',
+    description: 'Professional office cleaning with 24/7 flexible scheduling. Keep your workspace professional, productive, and hygienic. £5M insured.',
+    canonical: 'https://neatedgecleaning.com/commercial',
+  },
+  '/residential': {
+    title: 'Residential Home Cleaning | Weekly, Deep Clean & Refresh | Neatedge',
+    description: 'Professional home cleaning for West London. Regular maintenance, deep cleans, and refresh cleans. DBS checked, fully insured, trusted locally.',
+    canonical: 'https://neatedgecleaning.com/residential',
+  },
+  '/property-professionals': {
+    title: 'Property Cleaning for Agents & Landlords | Neatedge Professional Service',
+    description: 'Tailored cleaning solutions for estate agents, letting agents, landlords, and Airbnb hosts. Documented cleaning, flexible contracts, consistent quality.',
+    canonical: 'https://neatedgecleaning.com/property-professionals',
+  },
+  '/services': {
+    title: 'Professional Cleaning Services | Residential, Commercial & Specialist | Neatedge',
+    description: 'Explore our full range: residential, commercial, end-of-tenancy, deep cleaning, carpet care, and specialist services across West London.',
+    canonical: 'https://neatedgecleaning.com/services',
+  },
+  '/services/carpet-cleaning': {
+    title: 'Professional Carpet Cleaning | Steam Extraction | Neatedge Cleaning',
+    description: 'Professional carpet cleaning with hot water extraction. Removes dirt, stains, allergens and odours. Safe for kids and pets. 2-4 hour dry time.',
+    canonical: 'https://neatedgecleaning.com/services/carpet-cleaning',
+  },
+  '/services/deep-cleaning': {
+    title: 'Deep Cleaning Service | Thorough Home & Office Cleaning | Neatedge',
+    description: 'Detailed, thorough cleaning of every corner. Move-in, move-out, post-renovation, or seasonal refresh. Nothing missed.',
+    canonical: 'https://neatedgecleaning.com/services/deep-cleaning',
+  },
+  '/services/end-of-tenancy-cleaning': {
+    title: 'End of Tenancy Cleaning | Landlord & Agent Approved | Neatedge',
+    description: 'Professional end-of-tenancy cleaning for property handovers. Documented with photos & checklists. £5M insured. Landlord & agent preferred.',
+    canonical: 'https://neatedgecleaning.com/services/end-of-tenancy-cleaning',
+  },
+  '/services/office-cleaning': {
+    title: 'Office Cleaning Services | Flexible Scheduling | Neatedge Cleaning',
+    description: 'Professional office cleaning with minimal disruption. Daily, weekly or bi-weekly service. Fully insured, trained teams, responsive.',
+    canonical: 'https://neatedgecleaning.com/services/office-cleaning',
+  },
+  '/contact': {
+    title: 'Contact Neatedge Cleaning | Get a Quote | 07886 091926',
+    description: 'Get in touch for a free cleaning estimate. Phone, email, form, or WhatsApp. We respond within 24 hours.',
+    canonical: 'https://neatedgecleaning.com/contact',
+  },
+};
+
+/**
  * Generate canonical URL based on pathname
  * Server-side safe — returns homepage canonical if pathname not available
  */
@@ -35,6 +98,14 @@ export function generateCanonicalUrl(pathname?: string): string {
 }
 
 /**
+ * Get page-specific metadata by pathname
+ * Falls back to default if pathname not found in PAGE_METADATA
+ */
+export function getPageMetadata(pathname: string): Partial<PageMetadata> {
+  return PAGE_METADATA[pathname] || DEFAULT_METADATA;
+}
+
+/**
  * Generate complete metadata object
  * Environment-aware: applies noindex for staging/preview environments
  * Uses provided canonical or defaults to homepage
@@ -43,13 +114,13 @@ export function generateMetadata(overrides?: Partial<PageMetadata>, pathname?: s
   const robotsObject = getRobotsObject();
   const robotsString = robotsObject.noindex ? 'noindex, nofollow' : 'index, follow';
 
-  // Use provided canonical or generate from pathname
-  const canonical = overrides?.canonical || generateCanonicalUrl(pathname);
+  // Get page-specific metadata
+  const pageMetadata = pathname ? getPageMetadata(pathname) : DEFAULT_METADATA;
 
   return {
     ...DEFAULT_METADATA,
+    ...pageMetadata,
     ...overrides,
-    canonical,
     robots: robotsString,
   };
 }
@@ -65,6 +136,38 @@ export function generateMetadataWithRobotsObject(
   return {
     ...metadata,
     robotsObject: getRobotsObject(),
+  };
+}
+
+/**
+ * Generate Next.js Metadata export for a specific page
+ * Use this in each page's metadata export
+ * Example: export const metadata = createPageMetadata('/about');
+ */
+export function createPageMetadata(pathname: string): Metadata {
+  const pageMetadata = getPageMetadata(pathname);
+  const robotsObject = getRobotsObject();
+
+  return {
+    title: pageMetadata.title || DEFAULT_METADATA.title,
+    description: pageMetadata.description || DEFAULT_METADATA.description,
+    alternates: {
+      canonical: pageMetadata.canonical || DEFAULT_METADATA.canonical,
+    },
+    robots: robotsObject as any,
+    openGraph: {
+      title: pageMetadata.title || DEFAULT_METADATA.title,
+      description: pageMetadata.description || DEFAULT_METADATA.description,
+      url: pageMetadata.canonical || DEFAULT_METADATA.canonical,
+      images: [{ url: pageMetadata.ogImage || DEFAULT_METADATA.ogImage || '' }],
+      type: (pageMetadata.ogType as 'website') || 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: pageMetadata.title || DEFAULT_METADATA.title,
+      description: pageMetadata.description || DEFAULT_METADATA.description,
+      images: [pageMetadata.ogImage || DEFAULT_METADATA.ogImage || ''],
+    },
   };
 }
 
