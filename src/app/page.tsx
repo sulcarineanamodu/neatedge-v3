@@ -746,7 +746,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-sm sm:gap-md">
               <p>&copy; 2026 Neatedge Cleaning</p>
               <p className="hidden sm:block">•</p>
-              <p>Company No. 14909903</p>
+              <p>Company No. 16055197</p>
             </div>
             <div className="flex flex-wrap gap-md">
               <Link href="/privacy" className="hover:text-brand-gold transition-colors">Privacy</Link>
