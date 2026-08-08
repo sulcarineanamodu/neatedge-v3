@@ -53,19 +53,17 @@ export default function ResidentialPage() {
       {/* Services */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-12">Our Residential Services</h2>
+          <h2 className="text-4xl font-bold text-[#001F3F] mb-4 font-cinzel">A Clean Home Without the Effort</h2>
+          <p className="text-lg text-gray-700 mb-12">Choose the frequency that works for you. We handle everything so you can enjoy your space.</p>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { title: "Weekly Cleaning", desc: "Regular maintenance to keep your home fresh and tidy every week." },
-              { title: "Fortnightly Service", desc: "Scheduled every two weeks for consistent cleanliness without the cost." },
-              { title: "Monthly Deep Clean", desc: "Thorough cleaning with attention to detail and hard-to-reach areas." },
-              { title: "One-Off Blitzes", desc: "Deep clean your home before a special occasion or after moving in." },
-              { title: "Post-Builders Clean", desc: "Heavy-duty cleaning after construction or renovation work." },
-              { title: "End of Tenancy", desc: "Professional clean to help you recover your deposit." },
+              { title: "Regular Cleaning", desc: "Weekly or bi-weekly maintenance. The easiest way to keep your home consistently clean." },
+              { title: "Deep Cleaning", desc: "Thorough one-off clean for every corner, detail, and hard-to-reach area." },
+              { title: "Refresh Cleans", desc: "Move-in, move-out, post-renovation, or special occasion cleaning." },
             ].map((service) => (
-              <div key={service.title} className="bg-white p-6 rounded border border-gray-200 hover:shadow-lg">
-                <h3 className="font-bold text-[#001F3F] mb-2 text-lg">{service.title}</h3>
-                <p className="text-gray-700 text-sm">{service.desc}</p>
+              <div key={service.title} className="bg-brand-navy text-white p-6 rounded">
+                <h3 className="font-bold text-brand-gold mb-2 text-lg">{service.title}</h3>
+                <p className="text-grey-light">{service.desc}</p>
               </div>
             ))}
           </div>
@@ -104,12 +102,36 @@ export default function ResidentialPage() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section className="py-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-[#001F3F] mb-12 font-cinzel">Questions About Home Cleaning</h2>
+          <div className="space-y-6">
+            {[
+              { q: "How often should I get my home cleaned?", a: "It depends on your home and lifestyle. Weekly or bi-weekly is most common. We can help you find the right rhythm." },
+              { q: "Do you provide cleaning supplies?", a: "Yes. We bring our own eco-friendly supplies. If you prefer specific products, just let us know." },
+              { q: "Can I meet my cleaner before they start?", a: "Absolutely. We arrange an introductory meeting so you can discuss preferences and build trust." },
+              { q: "What if I'm not happy with a clean?", a: "We care about quality. Let us know, and we'll address any concerns and make it right." },
+              { q: "How do you handle access to my home?", a: "We can use your keys, arrange a meet-time, or discuss secure access options that work for you." },
+            ].map((item, idx) => (
+              <div key={idx} className="border-l-4 border-brand-gold pl-6">
+                <h3 className="font-bold text-[#001F3F] mb-2">{item.q}</h3>
+                <p className="text-gray-700">{item.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="bg-[#001F3F] text-white py-16 px-4">
+      <section className="bg-brand-navy text-white py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">Ready to Feel the Difference?</h2>
-          <p className="text-lg mb-8">Get a free, no-obligation quote from Neatedge today.</p>
-          <a href="/contact?enquiry=residential-estimate" className="inline-block bg-[#D4A574] text-[#001F3F] font-semibold px-8 py-3 rounded hover:bg-yellow-600">Book Your Free Estimate</a>
+          <h2 className="text-4xl font-bold mb-4 font-cinzel">Ready to Feel the Difference?</h2>
+          <p className="text-lg mb-8 text-grey-light">Get a free, no-obligation quote and meet your dedicated cleaner.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/contact?enquiry=residential-estimate" className="inline-block bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded hover:bg-yellow-400 transition-colors">Book Your Free Estimate</a>
+            <a href="tel:07886091926" className="inline-block border-2 border-brand-gold text-brand-gold font-semibold px-8 py-3 rounded hover:bg-brand-gold hover:text-brand-navy transition-colors">Call 07886 091926</a>
+          </div>
         </div>
       </section>
 

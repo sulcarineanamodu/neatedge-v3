@@ -50,19 +50,36 @@ export default function CommercialPage() {
 
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-12">Commercial Cleaning Services</h2>
+          <h2 className="text-4xl font-bold text-[#001F3F] mb-4 font-cinzel">Recurring Cleaning — The Foundation of a Professional Workspace</h2>
+          <p className="text-lg text-gray-700 mb-12">Recurring cleaning is more effective than one-off deep cleans. We maintain your space consistently, adapt to your needs, and become a trusted extension of your team.</p>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { title: "Office Cleaning", desc: "Daily office maintenance including desks and breakrooms." },
-              { title: "Retail Space Cleaning", desc: "Keep your shop clean and welcoming for customers." },
-              { title: "Warehouse Cleaning", desc: "Large-scale floor cleaning for warehouses and industrial spaces." },
-              { title: "Medical/Healthcare", desc: "High-standard hygiene protocols for surgeries and clinics." },
-              { title: "Hospitality Cleaning", desc: "Professional cleaning for hotels, restaurants, and venues." },
-              { title: "Carpet & Floor Care", desc: "Professional carpet cleaning and floor maintenance." },
-            ].map((service) => (
-              <div key={service.title} className="bg-white p-6 rounded border border-gray-200 hover:shadow-lg">
-                <h3 className="font-bold text-[#001F3F] mb-2 text-lg">{service.title}</h3>
-                <p className="text-gray-700 text-sm">{service.desc}</p>
+              { title: "Weekly", desc: "Regular maintenance for high-traffic areas. Ideal for active offices and retail." },
+              { title: "Bi-Weekly", desc: "Cost-effective option for moderate-use spaces. Balance between freshness and budget." },
+              { title: "Monthly", desc: "Maintenance for low-traffic professional spaces or corporate refresh schedules." },
+            ].map((option) => (
+              <div key={option.title} className="bg-brand-navy text-white p-6 rounded text-center">
+                <h3 className="font-bold text-brand-gold mb-2 text-xl">{option.title}</h3>
+                <p className="text-grey-light">{option.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-gray-50 py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold text-[#001F3F] mb-12 font-cinzel">What's Typically Included</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { title: "Desks & Workspaces", desc: "Surfaces, keyboards, phones, and high-touch areas." },
+              { title: "Kitchens & Break Rooms", desc: "Appliances, counters, floors, and refrigerator cleaning." },
+              { title: "Washrooms & Facilities", desc: "Toilets, sinks, mirrors, dispensers, and thorough sanitizing." },
+              { title: "Communal Spaces & Floors", desc: "Lobbies, corridors, and floor care appropriate to your surface." },
+            ].map((item) => (
+              <div key={item.title} className="bg-white p-6 rounded border-t-4 border-brand-gold">
+                <h3 className="font-bold text-[#001F3F] mb-2 text-lg">{item.title}</h3>
+                <p className="text-gray-700 text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -89,10 +106,32 @@ export default function CommercialPage() {
       </section>
 
       <section className="py-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-[#001F3F] mb-12 font-cinzel">Frequently Asked Questions</h2>
+          <div className="space-y-6">
+            {[
+              { q: "Do you work outside business hours?", a: "Yes. We offer evening and weekend cleaning to minimize disruption. Access and scheduling are discussed during your site survey." },
+              { q: "Can you handle multi-site contracts?", a: "Absolutely. We manage recurring cleaning across multiple properties with consistent standards and a single point of contact." },
+              { q: "What about access and parking?", a: "We'll discuss access requirements, parking, keys/codes, and any site-specific constraints during the site survey." },
+              { q: "How flexible is the scheduling?", a: "Very flexible. We adapt to your business hours, seasonal needs, and budget. Changes can be made with reasonable notice." },
+            ].map((item, idx) => (
+              <div key={idx} className="border-l-4 border-brand-gold pl-6">
+                <h3 className="font-bold text-[#001F3F] mb-2">{item.q}</h3>
+                <p className="text-gray-700">{item.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-brand-navy text-white py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-4">Keep Your Business Spotless</h2>
-          <p className="text-lg text-gray-700 mb-8">Get a free site survey and quotation.</p>
-          <a href="/contact?enquiry=commercial-survey" className="inline-block bg-[#D4A574] text-[#001F3F] font-semibold px-8 py-3 rounded hover:bg-yellow-600">Book Your Site Survey</a>
+          <h2 className="text-4xl font-bold mb-4 font-cinzel">Ready to Simplify Your Office Cleaning?</h2>
+          <p className="text-lg text-grey-light mb-8">Every commercial space is different. We'll assess your needs, schedule, and budget during a free site survey.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/contact?enquiry=commercial-survey" className="inline-block bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded hover:bg-yellow-400 transition-colors">Book Your Site Survey</a>
+            <a href="tel:07886091926" className="inline-block border-2 border-brand-gold text-brand-gold font-semibold px-8 py-3 rounded hover:bg-brand-gold hover:text-brand-navy transition-colors">Call 07886 091926</a>
+          </div>
         </div>
       </section>
 

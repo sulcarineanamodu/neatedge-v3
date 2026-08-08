@@ -50,23 +50,43 @@ export default function PropertyProfessionalsPage() {
 
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-12">Solutions for Property Professionals</h2>
+          <h2 className="text-4xl font-bold text-[#001F3F] mb-12 font-cinzel">Tailored Solutions by Role</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { title: "Estate Agents", items: ["Rapid turnaround between viewings", "Deep clean before photos", "Post-exchange sanitisation"] },
-              { title: "Letting Agents", items: ["End of tenancy cleaning", "Move-in refreshes", "Damage documentation"] },
-              { title: "Landlords & Airbnb", items: ["Fast turnover between guests", "Weekly maintenance cleans", "Guest satisfaction guaranteed"] },
+              { title: "Estate Agents", items: ["Deep clean before property photography", "Rapid turnaround between viewings", "Post-exchange professional refresh"] },
+              { title: "Letting Agents & Landlords", items: ["End-of-tenancy deep clean for inspections", "Move-in refresh for new tenants", "Portfolio management across multiple properties"] },
+              { title: "Airbnb & Serviced Accommodation", items: ["Quick-turnaround between-guest cleaning", "Weekly maintenance for active properties", "Communication and flexibility for guest satisfaction"] },
             ].map((solution) => (
-              <div key={solution.title} className="bg-blue-50 p-8 rounded-lg border border-blue-200">
-                <h3 className="text-2xl font-bold text-[#001F3F] mb-4">{solution.title}</h3>
+              <div key={solution.title} className="bg-brand-navy text-white p-8 rounded">
+                <h3 className="text-2xl font-bold text-brand-gold mb-4">{solution.title}</h3>
                 <ul className="space-y-2">
                   {solution.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-gray-700">
-                      <span className="text-[#D4A574] font-bold">✓</span>
+                    <li key={item} className="flex items-start gap-2 text-grey-light">
+                      <span className="text-brand-gold font-bold">✓</span>
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-[#001F3F] mb-12 font-cinzel">Common Questions</h2>
+          <div className="space-y-6">
+            {[
+              { q: "How quickly can you do turnaround cleaning?", a: "We offer 24-48 hour turnaround for most bookings. Urgent requests discussed on a case-by-case basis." },
+              { q: "Do you provide documentation (photos, checklists)?", a: "Yes. We document cleaning work with photos and checklists for your records and tenant disputes." },
+              { q: "Can you handle multiple properties?", a: "Absolutely. We manage portfolios across multiple sites with consistent standards and single point of contact." },
+              { q: "What about specialist cleaning?", a: "Carpet, oven, and window cleaning available. Discuss needs during consultation for accurate quoting." },
+              { q: "Do you work weekends?", a: "Yes. Weekend and evening slots available for turnaround cleaning between tenancies." },
+            ].map((item, idx) => (
+              <div key={idx} className="border-l-4 border-brand-gold pl-6">
+                <h3 className="font-bold text-[#001F3F] mb-2">{item.q}</h3>
+                <p className="text-gray-700">{item.a}</p>
               </div>
             ))}
           </div>
@@ -95,11 +115,15 @@ export default function PropertyProfessionalsPage() {
         </div>
       </section>
 
-      <section className="py-16 px-4">
+      <section className="bg-brand-navy text-white py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-4">Partner With a Cleaning Service You Can Trust</h2>
+          <h2 className="text-4xl font-bold mb-4 font-cinzel">Ready to Simplify Property Cleaning?</h2>
           <p className="text-lg text-gray-700 mb-8">Let's discuss how Neatedge can support your portfolio.</p>
-          <a href="/contact?enquiry=property-partnership" className="inline-block bg-[#D4A574] text-[#001F3F] font-semibold px-8 py-3 rounded hover:bg-yellow-600">Discuss a Partnership</a>
+          <p className="text-lg text-grey-light mb-8">Let's discuss how we can support your property management portfolio.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/contact?enquiry=property-partnership" className="inline-block bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded hover:bg-yellow-400 transition-colors">Schedule a Consultation</a>
+            <a href="tel:07886091926" className="inline-block border-2 border-brand-gold text-brand-gold font-semibold px-8 py-3 rounded hover:bg-brand-gold hover:text-brand-navy transition-colors">Call 07886 091926</a>
+          </div>
         </div>
       </section>
 
