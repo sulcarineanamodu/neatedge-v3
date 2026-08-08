@@ -20,16 +20,36 @@ export const DEFAULT_METADATA: PageMetadata = {
 };
 
 /**
+ * Generate canonical URL based on pathname
+ * Server-side safe — returns homepage canonical if pathname not available
+ */
+export function generateCanonicalUrl(pathname?: string): string {
+  if (!pathname || pathname === '/') {
+    return 'https://neatedgecleaning.com/';
+  }
+  // Remove trailing slash if present
+  const cleanPath = pathname.endsWith('/') && pathname !== '/'
+    ? pathname.slice(0, -1)
+    : pathname;
+  return `https://neatedgecleaning.com${cleanPath}`;
+}
+
+/**
  * Generate complete metadata object
  * Environment-aware: applies noindex for staging/preview environments
+ * Uses provided canonical or defaults to homepage
  */
-export function generateMetadata(overrides?: Partial<PageMetadata>): PageMetadata {
+export function generateMetadata(overrides?: Partial<PageMetadata>, pathname?: string): PageMetadata {
   const robotsObject = getRobotsObject();
   const robotsString = robotsObject.noindex ? 'noindex, nofollow' : 'index, follow';
+
+  // Use provided canonical or generate from pathname
+  const canonical = overrides?.canonical || generateCanonicalUrl(pathname);
 
   return {
     ...DEFAULT_METADATA,
     ...overrides,
+    canonical,
     robots: robotsString,
   };
 }

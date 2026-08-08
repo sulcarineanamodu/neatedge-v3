@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login/
+Disallow: /_next/
+Disallow: /.well-known/
+
+Sitemap: https://neatedgecleaning.com/sitemap.xml
