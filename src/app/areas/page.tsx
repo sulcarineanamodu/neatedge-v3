@@ -10,7 +10,7 @@ export default function AreasPage() {
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/neatedge-curated/hero.webp"
-            alt="Service areas across West London"
+            alt="Service coverage across West London"
             fill
             className="object-cover"
             priority
@@ -21,11 +21,11 @@ export default function AreasPage() {
 
         <div className="relative z-10 w-full px-md sm:px-lg md:px-xl">
           <div className="max-w-4xl mx-auto text-white">
-            <h1 className="font-cinzel font-bold mb-lg sm:mb-xl leading-tight text-white" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>Service Coverage Across West London</h1>
-            <p className="font-manrope text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed">Professional cleaning for homes and businesses in Uxbridge, West Drayton, Hayes, Hillingdon, and the Heathrow Corridor.</p>
+            <h1 className="font-cinzel font-bold mb-lg sm:mb-xl leading-tight text-white" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>We Serve West London & Surrounding Areas</h1>
+            <p className="font-manrope text-base sm:text-lg md:text-xl mb-md sm:mb-lg max-w-3xl text-grey-light leading-relaxed">Based locally, familiar with your community. Reliable service you can count on.</p>
             <div className="flex flex-col xs:flex-row gap-md sm:gap-lg">
-              <a href="/contact?enquiry=estimate" className="inline-block bg-brand-gold text-brand-navy font-semibold px-6 py-3 rounded hover:bg-yellow-400 transition-colors">Get an Estimate</a>
-              <a href="tel:07886091926" className="inline-block border-2 border-brand-gold text-brand-gold font-semibold px-6 py-3 rounded hover:bg-brand-gold hover:text-brand-navy transition-colors">Call Us</a>
+              <a href="/contact?enquiry=estimate" className="inline-block bg-brand-gold text-brand-navy font-semibold px-6 py-3 rounded hover:bg-yellow-400 transition-colors">Get a Cleaning Estimate</a>
+              <a href="tel:07886091926" className="inline-block border-2 border-brand-gold text-brand-gold font-semibold px-6 py-3 rounded hover:bg-brand-gold hover:text-brand-navy transition-colors">Call 07886 091926</a>
             </div>
           </div>
         </div>
@@ -33,87 +33,84 @@ export default function AreasPage() {
 
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-12">Our Primary Service Areas</h2>
-          <div className="grid md:grid-cols-4 gap-6 mb-12">
+          <h2 className="text-4xl font-bold text-center text-[#001F3F] mb-4 font-cinzel">Primary Coverage Areas</h2>
+          <p className="text-center text-gray-700 mb-12">We're based in West London and serve the following areas as our primary coverage zone. If you're outside these areas, reach out — we may still be able to help.</p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { name: "Uxbridge", desc: "Town centre and residential areas. Quick response." },
-              { name: "West Drayton", desc: "Residential and commercial properties. Same-day response." },
-              { name: "Hayes", desc: "Homes, offices, and commercial spaces. Trusted locally." },
-              { name: "Hillingdon", desc: "Covering all of the London borough. Flexible service." },
+              { name: 'Uxbridge', desc: 'Our home base. Full range of services, same-day availability often possible.' },
+              { name: 'West Drayton', desc: 'Regular and one-off cleaning for homes and businesses.' },
+              { name: 'Hayes', desc: 'Commercial and residential cleaning, flexible scheduling.' },
+              { name: 'Hillingdon', desc: 'Local expertise, consistent service quality.' },
             ].map((area) => (
-              <div key={area.name} className="bg-blue-50 p-6 rounded-lg text-center border border-blue-200">
-                <h3 className="text-2xl font-bold text-[#001F3F] mb-4">{area.name}</h3>
-                <p className="text-gray-700 text-sm mb-6">{area.desc}</p>
-                <a href="/contact?enquiry=residential-estimate" className="inline-block bg-[#001F3F] text-white font-semibold px-4 py-2 rounded text-sm hover:bg-[#003366]">Get a Quote</a>
+              <div key={area.name} className="bg-white p-6 rounded shadow hover:shadow-lg transition-shadow">
+                <h3 className="text-2xl font-bold text-[#001F3F] mb-2">{area.name}</h3>
+                <p className="text-gray-700 mb-4 text-sm">{area.desc}</p>
+                <a href="/contact?enquiry=estimate" className="inline-block bg-[#D4A574] text-[#001F3F] font-semibold px-4 py-2 rounded text-sm hover:bg-yellow-500">Get a Quote</a>
               </div>
             ))}
           </div>
-
-          <div className="bg-gray-50 p-8 rounded-lg">
-            <p className="text-gray-700 text-center"><strong>Don't see your area listed?</strong> We serve beyond these main locations. Contact us to check if we can help you.</p>
-          </div>
         </div>
       </section>
 
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-8">Wider Coverage</h2>
-          <p className="text-gray-700 mb-6">While our primary focus is the core West London areas listed above, we regularly serve properties across the surrounding region, including Ealing, Richmond, Staines, and areas along the M25 corridor.</p>
-          <p className="text-gray-700 mb-6">Travel time affects pricing and availability, so we're always upfront about what a service will cost based on your location.</p>
-          <p className="text-gray-700">For property professionals managing multiple sites, we offer flexible scheduling and discount pricing.</p>
-        </div>
-      </section>
-
-      <section className="bg-gray-50 py-16 px-4">
+      <section className="bg-gray-100 py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-12">Services Available in All Areas</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <h2 className="text-4xl font-bold text-center text-[#001F3F] mb-4 font-cinzel">Surrounding Areas</h2>
+          <p className="text-center text-gray-700 text-lg">We also serve: Ruislip, Ickenham, Yiewsley, Cowley, Iver, Slough (parts), and other West London suburbs. Contact us to confirm coverage for your postcode.</p>
+        </div>
+      </section>
+
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold text-center text-[#001F3F] mb-12 font-cinzel">Why Local Service Matters</h2>
+          <div className="grid md:grid-cols-4 gap-6">
             {[
-              { title: "Residential Cleaning", desc: "Weekly, fortnightly, or one-off cleans for homes." },
-              { title: "Commercial Cleaning", desc: "Office, retail, and business space cleaning." },
-              { title: "Property Professional Services", desc: "End of tenancy, move-in refreshes, and rapid turnarounds." },
-              { title: "Deep Cleaning", desc: "Thorough, detailed cleaning after construction or heavy use." },
-              { title: "Carpet & Floor Care", desc: "Professional carpet steam cleaning and floor maintenance." },
-              { title: "Garden Tidying", desc: "Basic outdoor maintenance and leaf clearing." },
-            ].map((service) => (
-              <div key={service.title} className="bg-white p-6 rounded border border-gray-200 hover:shadow-lg">
-                <h3 className="font-bold text-[#001F3F] mb-2 text-lg">{service.title}</h3>
-                <p className="text-gray-700 text-sm">{service.desc}</p>
+              { title: 'We know the area', desc: 'Understand local needs and community' },
+              { title: 'Faster response times', desc: 'Reliable arrivals, quick scheduling' },
+              { title: 'Same team, consistent quality', desc: 'You get familiar faces and continuity' },
+              { title: 'You can actually call us', desc: 'Real people, actual accountability' },
+            ].map((item) => (
+              <div key={item.title} className="bg-white p-6 rounded shadow hover:shadow-lg transition-shadow text-center">
+                <h3 className="font-bold text-[#001F3F] mb-2">{item.title}</h3>
+                <p className="text-sm text-gray-700">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-8">Why Local Matters</h2>
-          <div className="space-y-6">
-            {[
-              { title: "Fast Response Times", text: "No long waiting lists. We often arrange cleaning within 24-48 hours." },
-              { title: "Personal Accountability", text: "You can actually speak to someone who knows your area and cares." },
-              { title: "Understanding Local Challenges", text: "We know the parking, access, and planning issues unique to West London." },
-              { title: "Fair Pricing", text: "No premium for being local. Transparent pricing based on job scope." },
-            ].map((point) => (
-              <div key={point.title} className="flex gap-4">
-                <div className="w-12 h-12 bg-[#D4A574] text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">✓</div>
-                <div>
-                  <h3 className="font-bold text-[#001F3F] mb-1">{point.title}</h3>
-                  <p className="text-gray-700">{point.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 px-4">
+      <section className="bg-gray-100 py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-[#001F3F] mb-4">Check Availability for Your Area</h2>
-          <p className="text-gray-700 mb-8">Not sure if we cover your location? Get in touch and we'll let you know.</p>
-          <div className="flex gap-4 justify-center">
-            <a href="/contact?enquiry=residential-estimate" className="inline-block bg-[#001F3F] text-white font-semibold px-8 py-3 rounded hover:bg-[#003366]">Request a Quote Online</a>
-            <a href="tel:07886091926" className="inline-block border-2 border-[#001F3F] text-[#001F3F] font-semibold px-8 py-3 rounded hover:bg-[#001F3F] hover:text-white">Call 07886 091926</a>
+          <h2 className="text-4xl font-bold text-[#001F3F] mb-4 font-cinzel">Service Coverage</h2>
+          <p className="text-lg text-gray-700">From M25 to central Uxbridge, South to West Drayton, East to Ruislip — we're here.</p>
+        </div>
+      </section>
+
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold text-center text-[#001F3F] mb-12 font-cinzel">Questions About Service Areas</h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              { q: 'Do you serve my postcode?', a: 'If you\'re in Uxbridge, West Drayton, Hayes, Hillingdon, or surrounding areas, we almost certainly do. Contact us with your postcode to confirm.' },
+              { q: 'Can you serve areas outside your primary coverage?', a: 'We may be able to. Give us a call on 07886 091926 and we can discuss whether we can help.' },
+              { q: 'Why does location matter for cleaning services?', a: 'Being local means faster response times, lower travel costs, and genuine accountability. We\'re invested in our community.' },
+              { q: 'How quickly can you schedule in my area?', a: 'Primary areas like Uxbridge often have same-day or next-day availability. Other areas typically within 2-3 days. Call for current availability.' },
+            ].map((item, idx) => (
+              <div key={idx} className="bg-gray-100 p-6 rounded border-l-4 border-brand-gold">
+                <h3 className="font-bold text-[#001F3F] mb-2">{item.q}</h3>
+                <p className="text-gray-700 text-sm">{item.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-brand-navy text-white py-16 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4 font-cinzel">Not Sure If We Cover Your Area?</h2>
+          <p className="text-lg mb-8 text-grey-light">Get in touch. We'll confirm coverage and discuss how we can help with your cleaning needs.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/contact?enquiry=estimate" className="inline-block bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded hover:bg-yellow-400 transition-colors">Contact Us</a>
+            <a href="tel:07886091926" className="inline-block border-2 border-brand-gold text-brand-gold font-semibold px-8 py-3 rounded hover:bg-brand-gold hover:text-brand-navy transition-colors">Call 07886 091926</a>
           </div>
         </div>
       </section>
