@@ -128,7 +128,7 @@ export default function ContactPageClient() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { step: 1, title: 'Submit Your Inquiry or Call Us', desc: 'Tell us what you need or speak to us directly.' },
-              { step: 2, title: 'We Confirm Availability', desc: 'We'll confirm coverage and understand your needs.' },
+              { step: 2, title: 'We Confirm Availability', desc: 'We\'ll confirm coverage and understand your needs.' },
               { step: 3, title: 'Schedule and Enjoy', desc: 'Pick a date and time, and let us handle the rest.' },
             ].map((item) => (
               <div key={item.step} className="text-center">
