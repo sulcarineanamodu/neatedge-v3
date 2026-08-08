@@ -121,7 +121,7 @@ export default function Home() {
         {/* Background image with overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/neatedge/hero.jpg"
+            src="/images/neatedge-curated/hero.webp"
             alt="Professional cleaning service in West London"
             fill
             className="object-cover"
@@ -292,7 +292,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-64 sm:h-80 md:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-lg">
                   <Image
-                    src="/images/neatedge/end-of-tenancy.jpg"
+                    src="/images/neatedge-curated/end-of-tenancy.webp"
                     alt="End of Tenancy Cleaning - Bright modern apartment"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -325,7 +325,7 @@ export default function Home() {
               <div className="group cursor-pointer h-full">
                 <div className="relative h-64 sm:h-96 md:h-full rounded-2xl overflow-hidden shadow-lg mb-lg">
                   <Image
-                    src="/images/neatedge/deep-cleaning.jpg"
+                    src="/images/neatedge-curated/deep-cleaning.webp"
                     alt="Deep Cleaning - Professional cleaning work"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -358,7 +358,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
                   <Image
-                    src="/images/neatedge/commercial.jpg"
+                    src="/images/neatedge-curated/commercial.webp"
                     alt="Office Cleaning"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -412,7 +412,7 @@ export default function Home() {
               <div className="group cursor-pointer">
                 <div className="relative h-40 sm:h-56 rounded-xl overflow-hidden shadow-md mb-md">
                   <Image
-                    src="/images/neatedge/commercial.jpg"
+                    src="/images/neatedge-curated/commercial.webp"
                     alt="Commercial Cleaning"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -445,7 +445,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-2xl">
                 <Image
-                  src="/images/neatedge/end-of-tenancy.jpg"
+                  src="/images/neatedge-curated/residential.webp"
                   alt="Beautiful residential home interior"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -475,7 +475,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg mb-2xl">
                 <Image
-                  src="/images/neatedge/commercial.jpg"
+                  src="/images/neatedge-curated/commercial.webp"
                   alt="Professional commercial office space"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -512,7 +512,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[500px] rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src="/images/neatedge/team-working.jpg"
+                  src="/images/neatedge-curated/property-professionals.webp"
                   alt="Modern apartment property turnaround"
                   fill
                   className="object-cover"
@@ -643,7 +643,7 @@ export default function Home() {
             >
               <div className="relative h-96 sm:h-[450px] rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src="/images/neatedge/property-professionals.jpg"
+                  src="/images/neatedge-curated/why-neatedge.webp"
                   alt="Professional cleaner ensuring high standards"
                   fill
                   className="object-cover"
@@ -684,7 +684,7 @@ export default function Home() {
         {/* Full-width background image with overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/neatedge/commercial.jpg"
+            src="/images/neatedge-curated/final-cta.webp"
             alt="Premium modern property interior"
             fill
             className="object-cover"
